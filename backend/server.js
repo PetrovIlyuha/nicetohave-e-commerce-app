@@ -13,6 +13,7 @@ const app = express();
 // Routers
 import authRouter from './routes/authRoutes.js';
 import userRouter from './routes/userRoutes.js';
+import categoryRouter from './routes/categoryRoutes.js';
 
 // middlewares
 app.use(express.json());
@@ -40,6 +41,7 @@ mongoose
 // routes
 app.use('/api', authRouter);
 app.use('/api', userRouter);
+app.use('/api', categoryRouter);
 
 // Starting express server
 const PORT = process.env.PORT || 4000;
