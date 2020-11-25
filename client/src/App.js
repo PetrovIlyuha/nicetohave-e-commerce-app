@@ -10,6 +10,7 @@ import { authWithFirebase } from './firebase';
 import { useDispatch } from 'react-redux';
 import { logInUser } from './redux/user/userSlice';
 import { getCurrentUser } from './utils/auth';
+import { getAllCategoriesThunk } from './redux/categories/categoriesSlice';
 const PrivateUserRoute = React.lazy(() =>
   import('./components/routes/PrivateUserRoute'),
 );
@@ -27,6 +28,9 @@ const RegisterCompletion = React.lazy(() =>
 );
 const Wishlist = React.lazy(() => import('./pages/user/Wishlist'));
 const Password = React.lazy(() => import('./pages/user/Password'));
+const CreateCategory = React.lazy(() =>
+  import('./pages/category/CreateCategory'),
+);
 
 const App = () => {
   const dispatch = useDispatch();
@@ -54,6 +58,7 @@ const App = () => {
           });
       }
     });
+    dispatch(getAllCategoriesThunk());
     return () => unsubscribe();
   }, [dispatch]);
   return (
@@ -72,6 +77,10 @@ const App = () => {
         <RestrictedAdminRoute
           path='/admin/dashboard'
           component={AdminDashboard}
+        />
+        <RestrictedAdminRoute
+          path='/admin/category'
+          component={CreateCategory}
         />
         <ToastContainer />
       </Switch>
