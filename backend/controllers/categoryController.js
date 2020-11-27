@@ -12,9 +12,10 @@ export const listAllCategories = async (req, res) => {
 
 export const createCategory = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, image } = req.body;
     const category = await new Category({
       name,
+      image,
       slug: slugify(name),
     }).save();
     res.status(200).json(category);
@@ -64,5 +65,10 @@ export const removeCategory = async (req, res) => {
     res.status(200).json({
       message: `Category ${categoryToDelete.name} successfully removed!`,
     });
-  } catch (err) {}
+  } catch (err) {
+    return res.status(400).json({
+      message: `Category ${categoryToDelete.name} can't be removed!`,
+      error: err,
+    });
+  }
 };
