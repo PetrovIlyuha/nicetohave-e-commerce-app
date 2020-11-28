@@ -10,20 +10,22 @@ import { SiCodefactor } from 'react-icons/si';
 import { GiPresent } from 'react-icons/gi';
 import { MdSecurity } from 'react-icons/md';
 import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+
+const StyledNav = styled.nav`
+  height: 100%;
+  padding-left: 50px;
+  width: 120%;
+  margin-left: -14%;
+  padding-top: 20px;
+  background-color: ${props => (props.darkState ? '#0F2034' : '#714674')};
+  color: 'white';
+`;
 
 const AdminNavSidebar = () => {
   const { darkMode: darkState } = useSelector(state => state.theme);
   return (
-    <nav
-      style={{
-        height: '100%',
-        paddingLeft: 50,
-        width: '120%',
-        marginLeft: '-14%',
-        paddingTop: 20,
-        backgroundColor: darkState ? '#0F2034' : '#714674',
-        color: 'white',
-      }}>
+    <StyledNav darkState={darkState}>
       <ul className='nav flex-column justify-center'>
         <li className='nav-item'>
           <Link
@@ -85,7 +87,7 @@ const AdminNavSidebar = () => {
           </Link>
         </li>
       </ul>
-    </nav>
+    </StyledNav>
   );
 };
 
