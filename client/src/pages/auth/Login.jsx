@@ -13,12 +13,31 @@ import { Button } from 'antd';
 import { MailOutlined, GoogleOutlined } from '@ant-design/icons';
 import Spinner from '../../components/ui/Spinner';
 import { createOrUpdateUser, roleBasedRedirect } from '../../utils/auth.js';
+import styled from 'styled-components';
 
 // cogoToast.success('This is a success message');
 // cogoToast.info('This is a info message');
 // cogoToast.loading('This is a loading message');
 // cogoToast.warn('This is a warn message');
 // cogoToast.error('This is a error message');
+
+const StyledContainer = styled.div`
+  height: 100vh;
+  background-color: ${props => (props.darkState ? '#432371' : 'white')};
+  color: ${props => (props.darkState ? 'white' : 'black')};
+  position: relative;
+`;
+
+const StyledLoginForm = styled.div`
+  position: absolute;
+  top: 30%;
+  color: ${props => (props.darkState ? 'white' : 'black')};
+`;
+
+const StyledLoginInput = styled.input`
+  background-color: ${props => props.darkState && '#0F2034'};
+  color: ${props => props.darkState && 'yellow'};
+`;
 
 const Login = ({ history }) => {
   const [email, setEmail] = useState('');
@@ -27,6 +46,7 @@ const Login = ({ history }) => {
   const [emailInputError, setEmailInputError] = useState();
   const dispatch = useDispatch();
   const user = useSelector(state => state.user);
+  const { darkMode: darkState } = useSelector(state => state.theme);
 
   useEffect(() => {
     if (user && user.token) {
@@ -136,15 +156,16 @@ const Login = ({ history }) => {
     return <Spinner />;
   }
   return (
-    <div className='container fluid p-5'>
+    <StyledContainer darkState={darkState}>
       <div className='row'>
-        <div className='col-md-6 offset-md-3'>
+        <StyledLoginForm darkState={darkState} className='col-md-6 offset-md-3'>
           <h2>Login</h2>
           <form onSubmit={handleFormSubmit}>
             <div className='form-group'>
-              <input
+              <StyledLoginInput
                 type='email'
                 value={email}
+                darkState={darkState}
                 placeholder='Enter your email address'
                 className='form-control'
                 onBlur={() => checkEmailValidity(email)}
@@ -156,8 +177,9 @@ const Login = ({ history }) => {
               )}
             </div>
             <div className='form-group'>
-              <input
+              <StyledLoginInput
                 type='password'
+                darkState={darkState}
                 value={password}
                 placeholder='Enter your password'
                 className='form-control mt-3'
@@ -193,9 +215,9 @@ const Login = ({ history }) => {
               Forgot Password?
             </Link>
           </form>
-        </div>
+        </StyledLoginForm>
       </div>
-    </div>
+    </StyledContainer>
   );
 };
 

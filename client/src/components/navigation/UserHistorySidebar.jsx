@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { BiHistory } from 'react-icons/bi';
+import { MdSecurity } from 'react-icons/md';
+import { BsCardChecklist } from 'react-icons/bs';
 
 const UserHistorySidebar = () => {
   return (
@@ -18,6 +21,7 @@ const UserHistorySidebar = () => {
             to='/user/history'
             className='nav-link'
             style={{ color: '#E0CBA8' }}>
+            <BiHistory />
             Your History
           </Link>
         </li>
@@ -26,7 +30,7 @@ const UserHistorySidebar = () => {
             to='/user/password'
             className='nav-link'
             style={{ color: '#E0CBA8' }}>
-            Update Password
+            <MdSecurity /> Update Password
           </Link>
         </li>
         <li className='nav-item'>
@@ -34,7 +38,7 @@ const UserHistorySidebar = () => {
             to='/user/wishlist'
             className='nav-link'
             style={{ color: '#E0CBA8' }}>
-            Wishlist
+            <BsCardChecklist /> Wishlist
           </Link>
         </li>
       </ul>
