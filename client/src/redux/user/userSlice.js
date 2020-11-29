@@ -27,8 +27,4 @@ const todosSlice = createSlice({
 
 export const { logInUser, logoutUser } = todosSlice.actions;
 
-export const getUserTokenCheck = () => async dispatch => {
-  try {
-  } catch (err) {}
-};
 export default todosSlice.reducer;
