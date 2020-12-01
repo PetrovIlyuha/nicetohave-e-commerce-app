@@ -44,11 +44,12 @@ export const readCategory = async (req, res) => {
 
 export const updateCategory = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, image } = req.body;
     const { slug } = req.params;
+    console.log(slug);
     const categoryUpdated = await Category.findOneAndUpdate(
       { slug },
-      { name, slug: slugify(name) },
+      { name, image, slug: slugify(name) },
       { new: true },
     );
     res.status(200).json(categoryUpdated);
