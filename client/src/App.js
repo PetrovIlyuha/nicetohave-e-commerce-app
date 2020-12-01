@@ -11,6 +11,9 @@ import { useDispatch } from 'react-redux';
 import { logInUser } from './redux/user/userSlice';
 import { getCurrentUser } from './utils/auth';
 import { getAllCategoriesThunk } from './redux/categories/categoriesSlice';
+const UpdateCategory = React.lazy(() =>
+  import('./pages/admin/category/UpdateCategory'),
+);
 const PrivateUserRoute = React.lazy(() =>
   import('./components/routes/PrivateUserRoute'),
 );
@@ -29,7 +32,7 @@ const RegisterCompletion = React.lazy(() =>
 const Wishlist = React.lazy(() => import('./pages/user/Wishlist'));
 const Password = React.lazy(() => import('./pages/user/Password'));
 const CreateCategory = React.lazy(() =>
-  import('./pages/category/CreateCategory'),
+  import('./pages/admin/category/CreateCategory'),
 );
 
 const App = () => {
@@ -75,12 +78,18 @@ const App = () => {
         <PrivateUserRoute path='/user/history' component={History} />
         <PrivateUserRoute path='/user/wishlist' component={Wishlist} />
         <RestrictedAdminRoute
+          exact
           path='/admin/dashboard'
           component={AdminDashboard}
         />
         <RestrictedAdminRoute
+          exact
           path='/admin/category'
           component={CreateCategory}
+        />
+        <RestrictedAdminRoute
+          path='/admin/category/:slug'
+          component={UpdateCategory}
         />
         <ToastContainer />
       </Switch>

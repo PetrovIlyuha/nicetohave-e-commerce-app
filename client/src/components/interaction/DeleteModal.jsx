@@ -14,10 +14,12 @@ const DeleteModal = ({
   updateCategories,
 }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector(state => state.user);
+  const {
+    user: { token },
+  } = useSelector(state => state.user);
 
   const deleteAndUpdateCategories = async () => {
-    await dispatch(deleteOneCategoryBySlugThunk(category.slug, user.token));
+    await dispatch(deleteOneCategoryBySlugThunk(category.slug, token));
     setTimeout(() => onModalClose(), 40);
     updateCategories(true);
   };
