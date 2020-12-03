@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 const StyledNav = styled.nav`
-  height: 100%;
+  height: ${props => (props.fullHeight ? '100vh' : '100%')};
   padding-left: 50px;
   width: 120%;
   margin-left: -14%;
@@ -22,16 +22,16 @@ const StyledNav = styled.nav`
   color: 'white';
 `;
 
-const AdminNavSidebar = () => {
+const AdminNavSidebar = ({ fullHeight }) => {
   const { darkMode: darkState } = useSelector(state => state.theme);
   return (
-    <StyledNav darkState={darkState}>
+    <StyledNav darkState={darkState} fullHeight={fullHeight}>
       <ul className='nav flex-column justify-center'>
         <li className='nav-item'>
           <Link
             to='/admin/dashboard'
             className='nav-link'
-            style={{ color: darkState ? '#E0CBA8' : 'black' }}>
+            style={{ color: darkState ? '#E0CBA8' : 'white' }}>
             <AiOutlineDashboard /> Dashboard
           </Link>
         </li>
@@ -39,7 +39,7 @@ const AdminNavSidebar = () => {
           <Link
             to='/admin/product'
             className='nav-link'
-            style={{ color: darkState ? '#E0CBA8' : 'black' }}>
+            style={{ color: darkState ? '#E0CBA8' : 'white' }}>
             <SiCodefactor /> Product Management
           </Link>
         </li>
@@ -47,7 +47,7 @@ const AdminNavSidebar = () => {
           <Link
             to='/admin/products'
             className='nav-link'
-            style={{ color: darkState ? '#E0CBA8' : 'black' }}>
+            style={{ color: darkState ? '#E0CBA8' : 'white' }}>
             <AiTwotoneContainer /> Products
           </Link>
         </li>
@@ -55,7 +55,7 @@ const AdminNavSidebar = () => {
           <Link
             to='/admin/category'
             className='nav-link'
-            style={{ color: darkState ? '#E0CBA8' : 'black' }}>
+            style={{ color: darkState ? '#E0CBA8' : 'white' }}>
             <AiFillDatabase /> Single Categories
           </Link>
         </li>
@@ -64,7 +64,7 @@ const AdminNavSidebar = () => {
           <Link
             to='/admin/subcategory'
             className='nav-link'
-            style={{ color: darkState ? '#E0CBA8' : 'black' }}>
+            style={{ color: darkState ? '#E0CBA8' : 'white' }}>
             <AiFillGold /> Category Management
           </Link>
         </li>
@@ -73,7 +73,7 @@ const AdminNavSidebar = () => {
           <Link
             to='/admin/coupons'
             className='nav-link'
-            style={{ color: darkState ? '#E0CBA8' : 'black' }}>
+            style={{ color: darkState ? '#E0CBA8' : 'white' }}>
             <GiPresent /> Coupons
           </Link>
         </li>
@@ -82,7 +82,7 @@ const AdminNavSidebar = () => {
           <Link
             to='/user/password'
             className='nav-link'
-            style={{ color: darkState ? '#E0CBA8' : 'black' }}>
+            style={{ color: darkState ? '#E0CBA8' : 'white' }}>
             <MdSecurity /> Password Update
           </Link>
         </li>
