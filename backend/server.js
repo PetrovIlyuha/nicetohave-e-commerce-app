@@ -14,6 +14,7 @@ const app = express();
 import authRouter from './routes/authRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import categoryRouter from './routes/categoryRoutes.js';
+import subCategoryRouter from './routes/subCategoriesRoutes.js';
 
 // middlewares
 app.use(express.json());
@@ -42,6 +43,7 @@ mongoose
 app.use('/api', authRouter);
 app.use('/api', userRouter);
 app.use('/api', categoryRouter);
+app.use('/api', subCategoryRouter);
 
 // Starting express server
 const PORT = process.env.PORT || 4000;
