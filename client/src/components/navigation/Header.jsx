@@ -32,7 +32,7 @@ const Header = ({ history }) => {
     } else {
       dispatch({ type: 'theme/setDarkMode', payload: true });
     }
-  }, [darkMode]);
+  }, [darkMode, dispatch]);
 
   useEffect(() => {
     window.onscroll = () => {
@@ -82,6 +82,8 @@ const Header = ({ history }) => {
           boxShadow: showNavbarElevation
             ? '0px 2px 15px 5px rgba(0,0,0,0.25)'
             : '',
+          padding: '1rem',
+          fontSize: '1.2rem',
         }}>
         <Item key='home' icon={<HomeOutlined />}>
           <Link to='/'>Home</Link>
