@@ -34,6 +34,9 @@ const Password = React.lazy(() => import('./pages/user/Password'));
 const CreateCategory = React.lazy(() =>
   import('./pages/admin/category/CreateCategory'),
 );
+const CreateSubCategory = React.lazy(() =>
+  import('./pages/admin/subcategories/CreateSubCategory'),
+);
 
 const App = () => {
   const dispatch = useDispatch();
@@ -90,6 +93,10 @@ const App = () => {
         <RestrictedAdminRoute
           path='/admin/category/:slug'
           component={UpdateCategory}
+        />
+        <RestrictedAdminRoute
+          path='/admin/subcategory'
+          component={CreateSubCategory}
         />
         <ToastContainer />
       </Switch>
