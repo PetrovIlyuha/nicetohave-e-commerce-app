@@ -6,7 +6,7 @@ const AdminDashboard = () => {
     <div className='container-fluid'>
       <div className='row'>
         <div className='col-md-3'>
-          <AdminNavSidebar />
+          <AdminNavSidebar fullHeight={true} />
         </div>
         <div className='col-md-8 offset-md-1'>
           <div className='container mt-3'>
