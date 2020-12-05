@@ -7,21 +7,16 @@ import { deleteOneCategoryBySlugThunk } from '../../redux/categories/categoriesS
 
 const { Meta } = Card;
 
-const DeleteModal = ({
-  onModalClose,
-  onModalOpen,
-  category,
-  updateCategories,
-}) => {
+const DeleteModal = ({ onModalClose, onModalOpen, item, updateItems }) => {
   const dispatch = useDispatch();
   const {
     user: { token },
   } = useSelector(state => state.user);
 
-  const deleteAndUpdateCategories = async () => {
-    await dispatch(deleteOneCategoryBySlugThunk(category.slug, token));
+  const deleteAndUpdateItems = async () => {
+    await dispatch(deleteOneCategoryBySlugThunk(item.slug, token));
     setTimeout(() => onModalClose(), 40);
-    updateCategories(true);
+    updateItems(true);
   };
 
   return (
@@ -33,13 +28,13 @@ const DeleteModal = ({
       <Card
         hoverable
         style={{ width: 240 }}
-        cover={<img alt='category visual' src={category.image} />}>
+        cover={<img alt='category visual' src={item.image} />}>
         <Meta title='action' description='Remove The Category?' />
         <Divider orientation='center' style={{ fontSize: 10 }}>
           Confirm or decline
         </Divider>
         <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-          <Button type='danger' onClick={deleteAndUpdateCategories}>
+          <Button type='danger' onClick={deleteAndUpdateItems}>
             Delete
           </Button>
           <Button type='primary' onClick={onModalClose}>
