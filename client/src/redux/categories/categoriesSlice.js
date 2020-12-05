@@ -6,7 +6,10 @@ const categoriesSlice = createSlice({
   initialState: {
     loading: false,
     categories: [],
+    category: null,
+    createdCategory: null,
     deleteMessage: { message: null },
+    updateSuccess: false,
   },
   reducers: {
     categoriesLoading: (state, action) => {
@@ -42,6 +45,17 @@ const categoriesSlice = createSlice({
     },
     updateCategory: (state, { payload }) => {
       state.updatedCategory = payload;
+      state.updateSuccess = true;
+    },
+    clearRemovalMessage: (state, { payload }) => {
+      state.deleteMessage = null;
+    },
+    clearCreateCategory: (state, { payload }) => {
+      state.createdCategory = null;
+    },
+    resetUpdateState: (state, { payload }) => {
+      state.updateSuccess = false;
+      state.category = null;
     },
   },
 });
@@ -56,6 +70,10 @@ export const {
   createCategory,
   updateCategory,
   resetCreateFailure,
+  clearUpdatedCategory,
+  resetUpdateState,
+  clearCreateCategory,
+  clearRemovalMessage,
 } = categoriesSlice.actions;
 
 export const getAllCategoriesThunk = () => async dispatch => {
@@ -83,10 +101,15 @@ export const deleteOneCategoryBySlugThunk = (slug, token) => async dispatch => {
   dispatch(singleCategoryRemoved(data));
 };
 
-export const updateCategoryThunk = (slug, newName, token) => async dispatch => {
+export const updateCategoryThunk = (
+  slug,
+  newName,
+  newImage,
+  token,
+) => async dispatch => {
   const { data } = await axios.put(
     `${process.env.REACT_APP_API}/category/${slug}`,
-    { name: newName },
+    { name: newName, image: newImage },
     {
       headers: {
         token,
@@ -96,12 +119,12 @@ export const updateCategoryThunk = (slug, newName, token) => async dispatch => {
   dispatch(updateCategory(data));
 };
 
-export const createCategoryThunk = (name, token) => async dispatch => {
+export const createCategoryThunk = (categoryData, token) => async dispatch => {
   dispatch(categoryCreateRequested);
   try {
     const { data } = await axios.post(
       `${process.env.REACT_APP_API}/category`,
-      name,
+      categoryData,
       { headers: { token } },
     );
     dispatch(createCategory(data));
