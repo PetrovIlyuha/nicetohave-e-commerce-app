@@ -15,6 +15,7 @@ import authRouter from './routes/authRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import categoryRouter from './routes/categoryRoutes.js';
 import subCategoryRouter from './routes/subCategoriesRoutes.js';
+import productRouter from './routes/productRoutes.js';
 
 // middlewares
 app.use(express.json());
@@ -23,6 +24,8 @@ app.use(cors());
 
 // models registration
 import('./models/userModel.js');
+import('./models/subCategoryModel.js');
+import('./models/categoryModel.js');
 
 // Database connection
 mongoose
@@ -44,6 +47,7 @@ app.use('/api', authRouter);
 app.use('/api', userRouter);
 app.use('/api', categoryRouter);
 app.use('/api', subCategoryRouter);
+app.use('/api', productRouter);
 
 // Starting express server
 const PORT = process.env.PORT || 4000;
