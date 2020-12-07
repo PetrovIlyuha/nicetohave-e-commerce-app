@@ -40,7 +40,9 @@ export const createSubCategory = async (req, res) => {
 export const readSubCategory = async (req, res) => {
   try {
     const { slug } = req.params;
-    const subCategoryBySlug = await SubCategory.findOne({ slug });
+    const subCategoryBySlug = await SubCategory.findOne({ slug }).populate(
+      'parent',
+    );
     res.status(200).json(subCategoryBySlug);
   } catch (err) {
     return res.status(400).json(err);
@@ -49,14 +51,15 @@ export const readSubCategory = async (req, res) => {
 
 export const updateSubCategory = async (req, res) => {
   try {
-    const { name, image } = req.body;
+    const { name, image, parentCategoryId } = req.body;
     const { slug } = req.params;
-    console.log(slug);
+    const parentCategory = await Category.findById(parentCategoryId);
     const subCategoryUpdated = await SubCategory.findOneAndUpdate(
       { slug },
-      { name, image, slug: slugify(name) },
+      { name, image, parent: parentCategory._id, slug: slugify(name) },
       { new: true },
     );
+    console.log(subCategoryUpdated);
     res.status(200).json(subCategoryUpdated);
   } catch (err) {
     res.status(400).json({ error: `SubCategory update failed: ${err}` });
