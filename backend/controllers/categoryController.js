@@ -42,6 +42,16 @@ export const readCategory = async (req, res) => {
   }
 };
 
+export const getCategoryById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const category = await Category.findById(id);
+    res.status(200).json(category);
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+};
+
 export const updateCategory = async (req, res) => {
   try {
     const { name, image } = req.body;
