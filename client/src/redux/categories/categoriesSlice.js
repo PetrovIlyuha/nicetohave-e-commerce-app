@@ -56,6 +56,7 @@ const categoriesSlice = createSlice({
     resetUpdateState: (state, { payload }) => {
       state.updateSuccess = false;
       state.category = null;
+      state.parentCategory = null;
     },
   },
 });
@@ -71,6 +72,7 @@ export const {
   updateCategory,
   resetCreateFailure,
   clearUpdatedCategory,
+
   resetUpdateState,
   clearCreateCategory,
   clearRemovalMessage,
