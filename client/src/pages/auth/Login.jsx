@@ -15,12 +15,6 @@ import Spinner from '../../components/ui/Spinner';
 import { createOrUpdateUser, roleBasedRedirect } from '../../utils/auth.js';
 import styled from 'styled-components';
 
-// cogoToast.success('This is a success message');
-// cogoToast.info('This is a info message');
-// cogoToast.loading('This is a loading message');
-// cogoToast.warn('This is a warn message');
-// cogoToast.error('This is a error message');
-
 const StyledContainer = styled.div`
   height: 100vh;
   background-color: ${props => (props.darkState ? '#432371' : 'white')};
