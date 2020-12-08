@@ -4,17 +4,28 @@ import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteOneCategoryBySlugThunk } from '../../redux/categories/categoriesSlice';
+import { deleteOneSubCategoryBySlug } from '../../redux/subcategories/subCategoriesSlice';
 
 const { Meta } = Card;
 
-const DeleteModal = ({ onModalClose, onModalOpen, item, updateItems }) => {
+const DeleteModal = ({
+  onModalClose,
+  onModalOpen,
+  item,
+  updateItems,
+  title,
+}) => {
   const dispatch = useDispatch();
   const {
     user: { token },
   } = useSelector(state => state.user);
 
   const deleteAndUpdateItems = async () => {
-    await dispatch(deleteOneCategoryBySlugThunk(item.slug, token));
+    if (title === 'Category') {
+      await dispatch(deleteOneCategoryBySlugThunk(item.slug, token));
+    } else {
+      await dispatch(deleteOneSubCategoryBySlug(item.slug, token));
+    }
     setTimeout(() => onModalClose(), 40);
     updateItems(true);
   };
@@ -29,7 +40,7 @@ const DeleteModal = ({ onModalClose, onModalOpen, item, updateItems }) => {
         hoverable
         style={{ width: 240 }}
         cover={<img alt='category visual' src={item.image} />}>
-        <Meta title='action' description='Remove The Category?' />
+        <Meta title='action' description={`Remove The ${title}?`} />
         <Divider orientation='center' style={{ fontSize: 10 }}>
           Confirm or decline
         </Divider>
