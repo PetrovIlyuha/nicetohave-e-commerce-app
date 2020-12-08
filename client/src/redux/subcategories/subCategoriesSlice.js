@@ -7,6 +7,7 @@ const subCategoriesSlice = createSlice({
     loading: false,
     subcategories: [],
     subcategory: null,
+    parentCategory: null,
     createdSubCategory: null,
     updatedSubCategory: null,
     deleteMessage: { message: null },
@@ -58,6 +59,9 @@ const subCategoriesSlice = createSlice({
       state.updateSuccess = false;
       state.subcategory = null;
     },
+    setNewParentCategory: (state, { payload }) => {
+      state.parentCategory = payload;
+    },
   },
 });
 
@@ -73,6 +77,7 @@ export const {
   resetSubCategoryCreateFailure,
   resetUpdateStateSubCategory,
   clearCreateSubCategory,
+  setNewParentCategory,
   clearSubCategoryRemovalMessage,
 } = subCategoriesSlice.actions;
 
@@ -91,10 +96,7 @@ export const getSingleSubCategoryThunk = slug => async dispatch => {
   dispatch(singleSubCategoryReceived(data));
 };
 
-export const deleteOneSubCategoryBySlugThunk = (
-  slug,
-  token,
-) => async dispatch => {
+export const deleteOneSubCategoryBySlug = (slug, token) => async dispatch => {
   const { data } = await axios.delete(
     `${process.env.REACT_APP_API}/subcategory/${slug}`,
     {
@@ -108,13 +110,14 @@ export const deleteOneSubCategoryBySlugThunk = (
 
 export const updateSubCategoryThunk = (
   slug,
-  newName,
-  newImage,
+  name,
+  image,
+  parentCategoryId,
   token,
 ) => async dispatch => {
   const { data } = await axios.put(
-    `${process.env.REACT_APP_API}/category/${slug}`,
-    { name: newName, image: newImage },
+    `${process.env.REACT_APP_API}/subcategory/${slug}`,
+    { name, image, parentCategoryId },
     {
       headers: {
         token,
@@ -122,6 +125,13 @@ export const updateSubCategoryThunk = (
     },
   );
   dispatch(updateSubCategory(data));
+};
+
+export const getCategoryByIdThunk = id => async dispatch => {
+  const { data } = await axios.get(
+    `${process.env.REACT_APP_API}/categoryById/${id}`,
+  );
+  dispatch(setNewParentCategory(data));
 };
 
 export const createSubCategoryThunk = (
