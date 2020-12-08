@@ -13,6 +13,7 @@ const CatalogueWithFilter = ({
   items,
   filter,
   setOpenDeleteModal,
+  pathToItem,
   setItemToDelete,
 }) => {
   return (
@@ -20,7 +21,7 @@ const CatalogueWithFilter = ({
       style={{ marginLeft: -60 }}
       gutter={[16, { xs: 8, sm: 10, md: 12, lg: 16 }]}
       justify='center'>
-      {items.filter(filter).map((cat, index) => (
+      {items.filter(filter).map((item, index) => (
         <Col
           className='gutter-row'
           offset={1}
@@ -45,18 +46,21 @@ const CatalogueWithFilter = ({
                   maxHeight: 190,
                   overflow: 'hidden',
                 }}
-                alt={cat.name}
-                src={cat.image || NoCategoryImage}
+                alt={item.name}
+                src={item.image || NoCategoryImage}
               />
             }>
-            <Meta title={`${cat.name}`} style={{ color: 'white' }} />
+            <Meta title={`${item.name}`} style={{ color: 'white' }} />
             <Divider orientation='center' style={{ fontSize: 10 }}>
               Actions
             </Divider>
             <div>
-              <Link to={`/admin/category/${cat.slug}`}>
+              <Link to={`/admin/${pathToItem}/${item.slug}`}>
                 <Button
                   type='primary'
+                  onClick={() =>
+                    console.log(`/admin/${pathToItem}/${item.slug}`)
+                  }
                   block
                   style={{ marginBottom: 10 }}
                   icon={
@@ -78,7 +82,7 @@ const CatalogueWithFilter = ({
                 }}
                 onClick={() => {
                   setOpenDeleteModal(true);
-                  setItemToDelete(cat);
+                  setItemToDelete(item);
                 }}
                 block
                 icon={<BiTrashAlt size='15' style={{ marginRight: 6 }} />}>
