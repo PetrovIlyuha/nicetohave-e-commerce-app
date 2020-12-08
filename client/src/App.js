@@ -11,6 +11,9 @@ import { useDispatch } from 'react-redux';
 import { logInUser } from './redux/user/userSlice';
 import { getCurrentUser } from './utils/auth';
 import { getAllCategoriesThunk } from './redux/categories/categoriesSlice';
+const UpdateSubCategory = React.lazy(() =>
+  import('./pages/admin/subcategories/UpdateSubCategory'),
+);
 const UpdateCategory = React.lazy(() =>
   import('./pages/admin/category/UpdateCategory'),
 );
@@ -95,8 +98,13 @@ const App = () => {
           component={UpdateCategory}
         />
         <RestrictedAdminRoute
+          exact
           path='/admin/subcategory'
           component={CreateSubCategory}
+        />
+        <RestrictedAdminRoute
+          path='/admin/subcategory/:slug'
+          component={UpdateSubCategory}
         />
         <ToastContainer />
       </Switch>
