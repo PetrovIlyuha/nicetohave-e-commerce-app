@@ -39,7 +39,7 @@ const CreateCategory = () => {
   );
   useEffect(() => {
     dispatch(getAllCategoriesThunk());
-  }, [revalidateCategories]);
+  }, [revalidateCategories, dispatch]);
 
   useEffect(() => {
     if (createdCategory) {
@@ -49,7 +49,7 @@ const CreateCategory = () => {
         dispatch(clearCreateCategory());
       }, 1000);
     }
-  }, [createdCategory]);
+  }, [createdCategory, dispatch]);
 
   useEffect(() => {
     if (deleteMessage) {
@@ -58,7 +58,7 @@ const CreateCategory = () => {
         dispatch(clearRemovalMessage());
       }, 1000);
     }
-  }, [deleteMessage]);
+  }, [deleteMessage, dispatch]);
 
   const onSubmit = async data => {
     setLoading(true);
@@ -115,6 +115,7 @@ const CreateCategory = () => {
             />
             <CatalogueWithFilter
               darkState={darkState}
+              pathToItem='category'
               items={categories}
               filter={categoryFilter}
               setOpenDeleteModal={setOpenDeleteModal}
@@ -126,6 +127,7 @@ const CreateCategory = () => {
       <ToastContainer />
       {openDeleteModal && (
         <DeleteModal
+          title='Category'
           onModalClose={() => setOpenDeleteModal(false)}
           onModalOpen={() => setOpenDeleteModal(true)}
           updateItems={setRevalidateCategories}
