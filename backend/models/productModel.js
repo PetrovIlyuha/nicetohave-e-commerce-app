@@ -68,6 +68,8 @@ const productSchema = mongoose.Schema(
         'Green',
         'Orange',
         'Brown',
+        'Green',
+        'Blue',
       ],
     },
     brand: {
