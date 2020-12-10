@@ -1,5 +1,6 @@
 import Product from '../models/productModel.js';
 import slugify from 'slugify';
+
 export const createProduct = async (req, res) => {
   try {
     console.log(req.body);
