@@ -1,7 +1,7 @@
-import { Menu, Dropdown, message } from 'antd';
+import { Menu, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
-function SubDropDown({ items, selectItem }) {
+function SubDropDown({ label, items, selectItem }) {
   const onClick = ({ item }) => {
     selectItem(item.props.children[1]);
   };
@@ -16,9 +16,10 @@ function SubDropDown({ items, selectItem }) {
 
   return (
     <Dropdown overlay={menu}>
-      <a className='ant-dropdown-link' onClick={e => e.preventDefault()}>
-        Select Sub-Category <DownOutlined />
-      </a>
+      <span className='ant-dropdown-link' onClick={e => e.preventDefault()}>
+        {label}
+        <DownOutlined />
+      </span>
     </Dropdown>
   );
 }
