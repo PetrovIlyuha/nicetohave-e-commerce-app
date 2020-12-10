@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from 'antd';
 import { toast, ToastContainer } from 'react-toastify';
 
 const CreateCategoryForm = ({ onSubmit, loading }) => {
-  const { register, handleSubmit, errors, reset } = useForm();
+  const { register, handleSubmit, errors } = useForm();
 
   useEffect(() => {
     if (errors.name) {
