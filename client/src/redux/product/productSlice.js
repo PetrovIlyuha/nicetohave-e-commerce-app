@@ -46,8 +46,7 @@ export const createProductThunk = (product, token) => async dispatch => {
       },
     },
   );
-
-  // dispatch(subCategoriesReceived(data));
+  dispatch(createdProduct(data));
 };
 
 export const getCategoryByIdThunk = id => async dispatch => {
