@@ -40,7 +40,26 @@ const CreateProduct = () => {
   const [subCategoriesFromMain, setSubCategoriesFromMain] = useState([]);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
   const [filteredSubcategories, setFilteredSubcategories] = useState([]);
+
   const categoriesNames = categories?.map(cat => cat.name);
+
+  // Color state management
+  const [possibleColors, setPossibleColors] = useState({
+    black: '#03042E',
+    white: '#E7E7E8',
+    silver: '#E3E3FF',
+    gold: '#FFFFE3',
+    red: '#C13531',
+    blue: '#0D41E1',
+    green: '#86B241',
+    orange: '#CF8542',
+    brown: '#5D3A2C',
+  });
+  const [selectedColor, setSelectedColor] = useState(possibleColors.black);
+
+  const onColorSelectChange = value => {
+    setSelectedColor(possibleColors[value]);
+  };
 
   useEffect(() => {
     dispatch(getAllCategoriesThunk());
@@ -102,10 +121,12 @@ const CreateProduct = () => {
       ...data,
       category: category._id,
       subcategories: filteredSubcategories,
+      color: Object.keys(possibleColors).find(
+        key => possibleColors[key] === selectedColor,
+      ),
     };
-    console.log(productData);
-    console.log('about to create new product', data);
-    // await dispatch(createProductThunk({ data }, token));
+    console.log('about to create new product', productData);
+    await dispatch(createProductThunk(productData, token));
     // dispatch(getAllCategoriesThunk());
   };
 
@@ -115,7 +136,7 @@ const CreateProduct = () => {
       style={{ backgroundColor: darkState ? '#432371' : '#F0F3F6' }}>
       <div className='row'>
         <div className='col-md-3'>
-          <AdminNavSidebar fullHeight={true} />
+          <AdminNavSidebar fullHeight={!selectedSubCategories.length} />
         </div>
         <div className='col-md-8 offset-md-1'>
           <div className='container mt-3'>
@@ -179,7 +200,13 @@ const CreateProduct = () => {
               </>
             )}
             {filteredSubcategories.length > 0 && (
-              <CreateProductForm onSubmit={onSubmit} loading={loading} />
+              <CreateProductForm
+                onSubmit={onSubmit}
+                loading={loading}
+                possibleColors={possibleColors}
+                onColorSelectChange={onColorSelectChange}
+                selectedColor={selectedColor}
+              />
             )}
             {/* <Divider
               orientation='left'
