@@ -60,11 +60,11 @@ const CreateCategory = () => {
     setShowedSelectedCategory(
       categories.find(c => c.name === selectedCategory),
     );
-  }, [selectedCategory]);
+  }, [selectedCategory, dispatch, categories]);
 
   useEffect(() => {
     dispatch(getAllSubCategoriesThunk());
-  }, [revalidateCategories]);
+  }, [revalidateCategories, dispatch]);
 
   useEffect(() => {
     if (createdSubCategory) {
@@ -74,7 +74,7 @@ const CreateCategory = () => {
         dispatch(clearCreateSubCategory());
       }, 1000);
     }
-  }, [createdSubCategory]);
+  }, [createdSubCategory, dispatch]);
 
   useEffect(() => {
     if (deleteMessage) {
@@ -83,7 +83,7 @@ const CreateCategory = () => {
         dispatch(clearSubCategoryRemovalMessage());
       }, 1000);
     }
-  }, [deleteMessage]);
+  }, [deleteMessage, dispatch]);
 
   const onSubmit = async data => {
     const parentCategoryId = showedSelectedCategory._id;
