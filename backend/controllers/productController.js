@@ -31,14 +31,14 @@ export const createProduct = async (req, res) => {
           }
           const subcatIds = subcategories.map(sub => sub._id);
           let productBrand;
-          Brand.find({ name: brand }).then((err, data) => {
+          Brand.find({ name: brand }).then(async (err, data) => {
             if (err) {
               console.log(err);
               productBrand = new Brand({ name: brand });
             } else {
               productBrand = data;
             }
-            const newProduct = new Product({
+            const newProduct = await new Product({
               title,
               slug: productSlug,
               description,
@@ -51,12 +51,21 @@ export const createProduct = async (req, res) => {
               shipping,
               images: [image],
             }).save();
-            res.status(200).json(newProduct);
+            return res.status(200).json(newProduct);
           });
         });
     });
-  } catch (err) {
-    console.error(err);
-    res.status(400).send("Product 'create' operation have failed");
+  } catch (error) {
+    if (error.name === 'MongoError') {
+      if (error.keyValue.slug) {
+        return res.status(403).json({
+          error: `Category '${error.keyValue.slug}' can't be duplicated! Creation Forbidden!`,
+        });
+      }
+    } else {
+      return res.status(400).json({
+        error: 'Product creation had failed! Try later with attuned inputs...',
+      });
+    }
   }
 };
