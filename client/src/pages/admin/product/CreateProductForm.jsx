@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import { useForm } from 'react-hook-form';
 import { Button } from 'antd';
@@ -12,8 +13,9 @@ const CreateCategoryForm = ({
   onColorSelectChange,
   selectedColor,
 }) => {
-  const { register, handleSubmit, errors, getValues } = useForm();
-
+  const { register, handleSubmit, errors } = useForm();
+  const { darkMode } = useSelector(state => state.theme);
+  console.log(errors);
   useEffect(() => {
     if (errors.name) {
       toast.error('Product name was not provided!');
@@ -37,7 +39,9 @@ const CreateCategoryForm = ({
               class='form-control'
               name='title'
               autoFocus
-              style={{ color: 'black' }}
+              style={{
+                backgroundColor: darkMode ? 'whitesmoke' : 'lightgrey',
+              }}
               id='title'
               ref={register({ required: true, minLength: 3, maxLength: 40 })}
             />
@@ -50,7 +54,9 @@ const CreateCategoryForm = ({
             <textarea
               class='form-control'
               name='description'
-              style={{ color: 'black' }}
+              style={{
+                backgroundColor: darkMode ? 'whitesmoke' : 'lightgrey',
+              }}
               id='description'
               ref={register({ required: true, maxLength: 2000 })}
             />
@@ -66,7 +72,9 @@ const CreateCategoryForm = ({
               id='price'
               class='form-control'
               type='number'
-              style={{ color: 'black' }}
+              style={{
+                backgroundColor: darkMode ? 'whitesmoke' : 'lightgrey',
+              }}
               ref={register({ pattern: /^[0-9]+$/gi })}
             />
             {errors.price && 'Price must be provided.'}
@@ -80,7 +88,9 @@ const CreateCategoryForm = ({
               id='quantity'
               class='form-control'
               type='number'
-              style={{ color: 'black' }}
+              style={{
+                backgroundColor: darkMode ? 'whitesmoke' : 'lightgrey',
+              }}
               ref={register({ pattern: /^[0-9]+$/gi })}
             />
             {errors.quantity && 'Please specify the quantity.'}
@@ -102,7 +112,9 @@ const CreateCategoryForm = ({
                   width: 50,
                   height: 50,
                   borderRadius: 10,
-                  boxShadow: '3px 3px 10px rgba(0,0,0,0.3)',
+                  boxShadow: darkMode
+                    ? '3px 3px 10px rgba(200,200,200,0.3)'
+                    : '3px 3px 10px rgba(0,0,0,0.3)',
                   backdropFilter:
                     'blur(20px) saturate(160%) contrast(45%) brightness(140%)',
                   backgroundColor: selectedColor,
@@ -118,7 +130,9 @@ const CreateCategoryForm = ({
               id='sold'
               class='form-control'
               type='number'
-              style={{ color: 'black' }}
+              style={{
+                backgroundColor: darkMode ? 'whitesmoke' : 'lightgrey',
+              }}
               ref={register({ pattern: /^[0-9]+$/gi })}
             />
             {errors.quantity && 'Please provide the amount sold.'}
@@ -130,7 +144,9 @@ const CreateCategoryForm = ({
             <input
               class='form-control'
               name='brand'
-              style={{ color: 'black' }}
+              style={{
+                backgroundColor: darkMode ? 'whitesmoke' : 'lightgrey',
+              }}
               id='brand'
               ref={register({ required: true, minLength: 3, maxLength: 40 })}
             />
@@ -157,7 +173,9 @@ const CreateCategoryForm = ({
               name='image'
               class='form-control'
               id='image'
-              style={{ color: 'black' }}
+              style={{
+                backgroundColor: darkMode ? 'whitesmoke' : 'lightgrey',
+              }}
               ref={register({ required: true })}
             />
             {errors.image && 'Image for product is required.'}
