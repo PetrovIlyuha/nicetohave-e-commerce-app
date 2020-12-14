@@ -53,8 +53,7 @@ const productSchema = mongoose.Schema(
       type: Array,
     },
     shipping: {
-      type: String,
-      enum: ['Yes', 'No'],
+      type: Boolean,
     },
     color: {
       type: String,
