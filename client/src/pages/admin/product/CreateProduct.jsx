@@ -15,7 +15,8 @@ import { Divider } from 'antd';
 import DeleteModal from '../../../components/interaction/DeleteModal';
 import CreateProductForm from './CreateProductForm';
 import CatalogueWithFilter from '../category/CatalogueWithFilter';
-import { slideInLeft } from '../subcategories/animations';
+import { slideInLeft, slideInRight } from '../subcategories/animations';
+import { productColors } from './productColors';
 import SubDropDown from '../subcategories/SubDropDown';
 import styled from 'styled-components';
 import MultiSelect from './MultiSelect';
@@ -24,7 +25,9 @@ const { Search } = Input;
 
 const CreateProduct = () => {
   const dispatch = useDispatch();
-  const { product } = useSelector(state => state.products);
+  const { productCreateSuccess, product, productCreateError } = useSelector(
+    state => state.products,
+  );
   const { darkMode: darkState } = useSelector(state => state.theme);
   const { categories, deleteMessage } = useSelector(state => state.categories);
   const { subcategories } = useSelector(state => state.subcategories);
@@ -44,17 +47,8 @@ const CreateProduct = () => {
   const categoriesNames = categories?.map(cat => cat.name);
 
   // Color state management
-  const [possibleColors, setPossibleColors] = useState({
-    black: '#03042E',
-    white: '#E7E7E8',
-    silver: '#E3E3FF',
-    gold: '#FFFFE3',
-    red: '#C13531',
-    blue: '#0D41E1',
-    green: '#86B241',
-    orange: '#CF8542',
-    brown: '#5D3A2C',
-  });
+  const [possibleColors, setPossibleColors] = useState(productColors);
+
   const [selectedColor, setSelectedColor] = useState(possibleColors.black);
 
   const onColorSelectChange = value => {
@@ -87,15 +81,12 @@ const CreateProduct = () => {
     }
   }, [category, subcategories]);
 
-  // useEffect(() => {
-  //   if (createdCategory) {
-  //     setLoading(false);
-  //     toast.success('Category has been created! 🍾');
-  //     setTimeout(() => {
-  //       dispatch(clearCreateCategory());
-  //     }, 1000);
-  //   }
-  // }, [createdCategory, dispatch]);
+  useEffect(() => {
+    if (product && productCreateSuccess) {
+      setLoading(false);
+      toast.success(`Product ${product.title} has been created! 🍾`);
+    }
+  }, [product, productCreateSuccess, dispatch]);
 
   useEffect(() => {
     if (mainCategorySelect) {
@@ -106,14 +97,12 @@ const CreateProduct = () => {
     }
   }, [mainCategorySelect, dispatch, categories]);
 
-  // useEffect(() => {
-  //   if (deleteMessage) {
-  //     toast.success(deleteMessage.message);
-  //     setTimeout(() => {
-  //       dispatch(clearRemovalMessage());
-  //     }, 1000);
-  //   }
-  // }, [deleteMessage, dispatch]);
+  useEffect(() => {
+    if (productCreateError) {
+      setLoading(false);
+      toast.error(productCreateError);
+    }
+  }, [productCreateError, dispatch]);
 
   const onSubmit = async data => {
     setLoading(true);
@@ -125,9 +114,7 @@ const CreateProduct = () => {
         key => possibleColors[key] === selectedColor,
       ),
     };
-    console.log('about to create new product', productData);
     await dispatch(createProductThunk(productData, token));
-    // dispatch(getAllCategoriesThunk());
   };
 
   return (
@@ -191,7 +178,10 @@ const CreateProduct = () => {
                     selectedItems={selectedSubCategories}
                   />
                   {selectedSubCategories.length === 1 && (
-                    <motion.p>
+                    <motion.p
+                      variants={slideInRight}
+                      initial='hidden'
+                      animate='show'>
                       You can select multiple sub-categories by focusing on the
                       field
                     </motion.p>
