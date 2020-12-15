@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Image, Input } from 'antd';
 
 import AdminNavSidebar from '../../../components/navigation/AdminNavSidebar';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { getAllCategoriesThunk } from '../../../redux/categories/categoriesSlice';
@@ -25,13 +25,17 @@ const { Search } = Input;
 
 const CreateProduct = () => {
   const dispatch = useDispatch();
-  const { productCreateSuccess, product, productCreateError } = useSelector(
-    state => state.products,
-  );
+  const {
+    category,
+    productCreateSuccess,
+    product,
+    loading: productCreateLoading,
+    productCreateError,
+  } = useSelector(state => state.products);
+
   const { darkMode: darkState } = useSelector(state => state.theme);
-  const { categories, deleteMessage } = useSelector(state => state.categories);
+  const { categories } = useSelector(state => state.categories);
   const { subcategories } = useSelector(state => state.subcategories);
-  const { category } = useSelector(state => state.products);
   const {
     user: { token },
   } = useSelector(state => state.user);
@@ -192,8 +196,9 @@ const CreateProduct = () => {
             {filteredSubcategories.length > 0 && (
               <CreateProductForm
                 onSubmit={onSubmit}
-                loading={loading}
+                loading={productCreateLoading}
                 possibleColors={possibleColors}
+                success={productCreateSuccess}
                 onColorSelectChange={onColorSelectChange}
                 selectedColor={selectedColor}
               />
@@ -215,7 +220,6 @@ const CreateProduct = () => {
           </div>
         </div>
       </div>
-      <ToastContainer />
       {openDeleteModal && (
         <DeleteModal
           title='Category'

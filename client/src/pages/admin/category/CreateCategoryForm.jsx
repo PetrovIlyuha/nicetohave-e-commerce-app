@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from 'antd';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const CreateCategoryForm = ({ onSubmit, loading }) => {
   const { register, handleSubmit, errors } = useForm();
@@ -45,7 +45,6 @@ const CreateCategoryForm = ({ onSubmit, loading }) => {
         loading={loading}>
         Create
       </Button>
-      <ToastContainer />
     </form>
   );
 };

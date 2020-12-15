@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import UserHistorySidebar from '../../components/navigation/UserHistorySidebar';
 import UpdatePass from '../../assets/password-update.svg';
 import { authWithFirebase } from '../../firebase.js';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import Spinner from '../../components/ui/Spinner';
 const Password = () => {
   const [password, setPassword] = useState('');
@@ -91,7 +91,6 @@ const Password = () => {
           )}
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };

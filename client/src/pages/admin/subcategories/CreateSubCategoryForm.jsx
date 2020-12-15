@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from 'antd';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const CreateSubCategoryForm = ({ onSubmit, loading, resetForm }) => {
   const { register, handleSubmit, errors, reset } = useForm();
@@ -51,7 +51,6 @@ const CreateSubCategoryForm = ({ onSubmit, loading, resetForm }) => {
         loading={loading}>
         Create
       </Button>
-      <ToastContainer />
     </form>
   );
 };

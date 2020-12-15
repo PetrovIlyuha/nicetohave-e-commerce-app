@@ -40,7 +40,7 @@ const AdminNavSidebar = ({ fullHeight }) => {
             to='/admin/product'
             className='nav-link'
             style={{ color: darkState ? '#E0CBA8' : 'white' }}>
-            <SiCodefactor /> Product Management
+            <SiCodefactor /> Products Management
           </Link>
         </li>
         <li className='nav-item'>
@@ -48,7 +48,7 @@ const AdminNavSidebar = ({ fullHeight }) => {
             to='/admin/products'
             className='nav-link'
             style={{ color: darkState ? '#E0CBA8' : 'white' }}>
-            <AiTwotoneContainer /> Products
+            <AiTwotoneContainer /> Products Creation
           </Link>
         </li>
         <li className='nav-item'>
