@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { toast, ToastContainer } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import AdminNavSidebar from '../../../components/navigation/AdminNavSidebar';
 import Spinner from '../../../components/ui/Spinner';
@@ -26,7 +26,7 @@ const UpdateCategory = ({ match, history }) => {
   useEffect(() => {
     dispatch(getSingleCategoryThunk(slug));
     dispatch(resetUpdateState());
-  }, [slug]);
+  }, [slug, dispatch]);
 
   const onSubmit = async data => {
     const { name, image } = data;
@@ -47,7 +47,7 @@ const UpdateCategory = ({ match, history }) => {
     } else {
       return;
     }
-  }, [updateSuccess]);
+  }, [updateSuccess, dispatch, history]);
 
   if (loading) return <Spinner message='Loading' />;
 
@@ -79,8 +79,6 @@ const UpdateCategory = ({ match, history }) => {
                   </div>
                 </div>
                 <UpdateCategoryForm onSubmit={onSubmit} loading={loading} />
-
-                <ToastContainer />
               </div>
             </div>
           </div>

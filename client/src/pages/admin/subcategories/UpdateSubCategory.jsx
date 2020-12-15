@@ -2,7 +2,7 @@ import { Divider } from 'antd';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import AdminNavSidebar from '../../../components/navigation/AdminNavSidebar';
 import Spinner from '../../../components/ui/Spinner';
@@ -126,7 +126,6 @@ const UpdateSubCategory = ({ match, history }) => {
               </div>
             </motion.div>
           </div>
-          <ToastContainer />
         </div>
       )}
     </>
