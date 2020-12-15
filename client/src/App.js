@@ -113,8 +113,8 @@ const App = () => {
           path='/admin/products'
           component={CreateProduct}
         />
-        <ToastContainer />
       </Switch>
+      <ToastContainer />
     </>
   );
 };

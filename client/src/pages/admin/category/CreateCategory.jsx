@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Input } from 'antd';
 
 import AdminNavSidebar from '../../../components/navigation/AdminNavSidebar';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import {
@@ -124,7 +124,7 @@ const CreateCategory = () => {
           </div>
         </div>
       </div>
-      <ToastContainer />
+
       {openDeleteModal && (
         <DeleteModal
           title='Category'
