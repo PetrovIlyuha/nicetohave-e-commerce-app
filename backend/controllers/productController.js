@@ -20,52 +20,49 @@ export const createProduct = async (req, res) => {
   try {
     const productSlug = slugify(title);
     const subCategoriesIds = subcategories.map(c => c._id);
-    await Category.findById(category).exec((err, category) => {
-      let categoryID = category._id;
-      SubCategory.find()
-        .where('_id')
-        .in(subCategoriesIds)
-        .exec((err, subcategories) => {
-          if (err) {
-            console.error(err);
-          }
-          const subcatIds = subcategories.map(sub => sub._id);
-          let productBrand;
-          Brand.find({ name: brand }).then(async (err, data) => {
-            if (err) {
-              console.log(err);
-              productBrand = new Brand({ name: brand });
-            } else {
-              productBrand = data;
-            }
-            const newProduct = await new Product({
-              title,
-              slug: productSlug,
-              description,
-              quantity,
-              category: categoryID,
-              subcategories: subcatIds,
-              price,
-              sold,
-              brand: productBrand,
-              shipping,
-              images: [image],
-            }).save();
-            return res.status(200).json(newProduct);
-          });
-        });
-    });
+    const categoryDB = await Category.findById(category);
+    let categoryID = categoryDB?._id;
+    const subcategoriesDB = await SubCategory.find()
+      .where('_id')
+      .in(subCategoriesIds);
+
+    const subcatIds = subcategoriesDB.map(sub => sub._id);
+    let productBrand;
+    const brandDB = await Brand.find({ name: brand });
+    if (!brandDB) {
+      productBrand = new Brand({ name: brand });
+    } else {
+      productBrand = brandDB;
+    }
+    const newProduct = await new Product({
+      title,
+      slug: productSlug,
+      description,
+      quantity,
+      category: categoryID,
+      subcategories: subcatIds,
+      price,
+      sold,
+      brand: productBrand._id,
+      shipping,
+      images: [image],
+    }).save();
+    if (newProduct) {
+      res.status(200).json(newProduct);
+    }
   } catch (error) {
+    console.log('Error detector', error);
     if (error.name === 'MongoError') {
       if (error.keyValue.slug) {
         return res.status(403).json({
-          error: `Category '${error.keyValue.slug}' can't be duplicated! Creation Forbidden!`,
+          err: `Category '${error.keyValue.slug}' can't be duplicated! Creation Forbidden!`,
         });
       }
     } else {
       return res.status(400).json({
-        error: 'Product creation had failed! Try later with attuned inputs...',
+        err: 'Product creation had failed! Try later with attuned inputs...',
       });
     }
   }
 };
+// }
