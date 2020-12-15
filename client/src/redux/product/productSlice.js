@@ -8,8 +8,10 @@ const subCategoriesSlice = createSlice({
     category: null,
     subcategories: null,
     product: null,
+    productCreateSuccess: false,
     deleteMessage: { message: null },
     updateSuccess: false,
+    productCreateError: false,
   },
   reducers: {
     createProductLoading: (state, action) => {
@@ -20,6 +22,12 @@ const subCategoriesSlice = createSlice({
     },
     createdProduct: (state, { payload }) => {
       state.product = payload;
+      state.productCreateSuccess = true;
+      state.loading = false;
+    },
+    productCreateFailed: (state, { payload }) => {
+      state.productCreateError = 'DB product creation error occurred!';
+      state.loading = false;
     },
     clearCreateProductState: (state, { payload }) => {
       state.product = null;
@@ -32,21 +40,26 @@ export const {
   createProductLoading,
   createdProduct,
   setMainCategory,
+  productCreateFailed,
   clearCreateProductState,
 } = subCategoriesSlice.actions;
 
 export const createProductThunk = (product, token) => async dispatch => {
   dispatch(createProductLoading());
-  const { data } = await axios.post(
-    `${process.env.REACT_APP_API}/product`,
-    product,
-    {
-      headers: {
-        token,
+  try {
+    const { data } = await axios.post(
+      `${process.env.REACT_APP_API}/product`,
+      product,
+      {
+        headers: {
+          token,
+        },
       },
-    },
-  );
-  dispatch(createdProduct(data));
+    );
+    dispatch(createdProduct(data));
+  } catch (err) {
+    dispatch(productCreateFailed(err.response.data.error));
+  }
 };
 
 export const getCategoryByIdThunk = id => async dispatch => {
