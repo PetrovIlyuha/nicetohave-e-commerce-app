@@ -26,6 +26,7 @@ app.use(cors());
 import('./models/userModel.js');
 import('./models/subCategoryModel.js');
 import('./models/categoryModel.js');
+import('./models/brandModel.js');
 
 // Database connection
 mongoose
