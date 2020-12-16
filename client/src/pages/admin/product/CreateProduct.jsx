@@ -87,7 +87,6 @@ const CreateProduct = () => {
 
   useEffect(() => {
     if (product && productCreateSuccess) {
-      setLoading(false);
       toast.success(`Product ${product.title} has been created! 🍾`);
     }
   }, [product, productCreateSuccess, dispatch]);
@@ -103,13 +102,11 @@ const CreateProduct = () => {
 
   useEffect(() => {
     if (productCreateError) {
-      setLoading(false);
       toast.error(productCreateError);
     }
   }, [productCreateError, dispatch]);
 
   const onSubmit = async data => {
-    setLoading(true);
     const productData = {
       ...data,
       category: category._id,
@@ -203,32 +200,9 @@ const CreateProduct = () => {
                 selectedColor={selectedColor}
               />
             )}
-            {/* <Divider
-              orientation='left'
-              style={{ color: darkState ? 'white' : 'black' }}>
-              Manage Categories
-            </Divider> */}
-
-            {/* <CatalogueWithFilter
-              darkState={darkState}
-              pathToItem='category'
-              items={categories}
-              // filter={categoryFilter}
-              setOpenDeleteModal={setOpenDeleteModal}
-              // setItemToDelete={setCategoryToDelete}
-            /> */}
           </div>
         </div>
       </div>
-      {openDeleteModal && (
-        <DeleteModal
-          title='Category'
-          onModalClose={() => setOpenDeleteModal(false)}
-          onModalOpen={() => setOpenDeleteModal(true)}
-          // updateItems={setRevalidateCategories}
-          // item={categoryToDelete}
-        />
-      )}
     </div>
   );
 };
