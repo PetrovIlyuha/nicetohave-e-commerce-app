@@ -18,6 +18,14 @@ export const createProduct = async (req, res) => {
     category,
   } = req.body;
   try {
+    const brandDB = await Brand.findOne({ name: brand });
+    let productBrand;
+    if (!brandDB) {
+      productBrand = await Brand.create({ name: brand });
+    } else {
+      productBrand = brandDB;
+    }
+
     const productSlug = slugify(title);
     const subCategoriesIds = subcategories.map(c => c._id);
     const categoryDB = await Category.findById(category);
@@ -27,13 +35,7 @@ export const createProduct = async (req, res) => {
       .in(subCategoriesIds);
 
     const subcatIds = subcategoriesDB.map(sub => sub._id);
-    let productBrand;
-    const brandDB = await Brand.find({ name: brand });
-    if (!brandDB) {
-      productBrand = new Brand({ name: brand });
-    } else {
-      productBrand = brandDB;
-    }
+
     const newProduct = await new Product({
       title,
       slug: productSlug,
@@ -65,4 +67,10 @@ export const createProduct = async (req, res) => {
     }
   }
 };
-// }
+
+export const getAllProducts = async (req, res) => {
+  let products = await Product.find({})
+    .populate('category subcategories')
+    .populate('brand');
+  res.status(200).json(products);
+};
