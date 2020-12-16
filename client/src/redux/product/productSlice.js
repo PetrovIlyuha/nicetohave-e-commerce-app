@@ -8,14 +8,16 @@ const subCategoriesSlice = createSlice({
     category: null,
     subcategories: null,
     product: null,
-    productCreateSuccess: false,
+    productCreateSuccess: null,
     deleteMessage: { message: null },
     updateSuccess: false,
-    productCreateError: false,
+    productCreateError: null,
   },
   reducers: {
     createProductLoading: (state, action) => {
       state.loading = true;
+      state.productCreateError = null;
+      state.productCreateSuccess = null;
     },
     setMainCategory: (state, { payload }) => {
       state.category = payload;
