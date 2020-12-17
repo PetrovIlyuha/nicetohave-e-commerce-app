@@ -12,16 +12,13 @@ import {
   createProductThunk,
 } from '../../../redux/product/productSlice';
 import { Divider } from 'antd';
-import DeleteModal from '../../../components/interaction/DeleteModal';
 import CreateProductForm from './CreateProductForm';
-import CatalogueWithFilter from '../category/CatalogueWithFilter';
 import { slideInLeft, slideInRight } from '../subcategories/animations';
 import { productColors } from './productColors';
 import SubDropDown from '../subcategories/SubDropDown';
 import styled from 'styled-components';
 import MultiSelect from './MultiSelect';
 import { getAllSubCategoriesThunk } from '../../../redux/subcategories/subCategoriesSlice';
-const { Search } = Input;
 
 const CreateProduct = () => {
   const dispatch = useDispatch();
@@ -39,9 +36,7 @@ const CreateProduct = () => {
   const {
     user: { token },
   } = useSelector(state => state.user);
-  const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
   const [mainCategorySelect, setMainCategorySelect] = useState(null);
 
   const [subCategoriesFromMain, setSubCategoriesFromMain] = useState([]);
@@ -117,7 +112,7 @@ const CreateProduct = () => {
     };
     await dispatch(createProductThunk(productData, token));
   };
-
+  console.log(subcategories);
   return (
     <div
       className={darkState ? 'container-fluid text-white' : 'container-fluid'}
@@ -164,7 +159,12 @@ const CreateProduct = () => {
             </motion.div>
             {category && (
               <>
-                <Divider className={darkState ? 'text-white' : ''} />
+                <Divider
+                  style={{
+                    backgroundColor: darkState ? 'white' : '',
+                    height: '2px',
+                  }}
+                />
                 <motion.h2
                   variants={slideInLeft}
                   initial='hidden'
@@ -176,7 +176,9 @@ const CreateProduct = () => {
                   <MultiSelect
                     items={subCategoriesFromMain}
                     setSelected={setSelectedSubCategories}
-                    selectedItems={selectedSubCategories}
+                    placeholder={'Select subcategory(ies)'}
+                    // selectedItems={selectedSubCategories}
+                    icon={'📦'}
                   />
                   {selectedSubCategories.length === 1 && (
                     <motion.p
