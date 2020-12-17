@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import * as Sentry from '@sentry/react';
+import { Integrations } from '@sentry/tracing';
 import { Route, Switch } from 'react-router-dom';
 
 // pages
@@ -43,6 +45,17 @@ const CreateSubCategory = React.lazy(() =>
 const CreateProduct = React.lazy(() =>
   import('./pages/admin/product/CreateProduct'),
 );
+
+Sentry.init({
+  dsn:
+    'https://d104f00d7b7c45418a0d1883cf807c60@o492741.ingest.sentry.io/5560542',
+  autoSessionTracking: true,
+  integrations: [new Integrations.BrowserTracing()],
+
+  // We recommend adjusting this value in production, or using tracesSampler
+  // for finer control
+  tracesSampleRate: 1.0,
+});
 
 const App = () => {
   const dispatch = useDispatch();
