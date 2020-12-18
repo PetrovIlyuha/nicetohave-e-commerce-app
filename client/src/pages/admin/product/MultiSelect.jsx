@@ -3,7 +3,13 @@ import { Select } from 'antd';
 
 const { Option } = Select;
 
-const MultiSelect = ({ items, setSelected, selectedItems }) => {
+const MultiSelect = ({
+  items,
+  setSelected,
+  selectedItems,
+  icon,
+  placeholder,
+}) => {
   function handleChange(value) {
     setSelected(value);
   }
@@ -11,7 +17,7 @@ const MultiSelect = ({ items, setSelected, selectedItems }) => {
     <Select
       mode='multiple'
       style={{ width: '100%' }}
-      placeholder='Select subcategory'
+      placeholder={placeholder}
       onChange={handleChange}
       optionLabelProp='label'>
       {items.length > 0 &&
@@ -19,7 +25,7 @@ const MultiSelect = ({ items, setSelected, selectedItems }) => {
           <Option value={item.name} label={item.name}>
             <div className='demo-option-label-item'>
               <span role='img' aria-label='China'>
-                📦
+                {icon}
               </span>
               {item.name}
             </div>
