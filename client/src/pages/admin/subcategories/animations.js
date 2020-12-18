@@ -23,7 +23,7 @@ export const rotateYLeftToRight = {
     opacity: 1,
     rotateY: 0,
     transition: {
-      duration: 0.3,
+      duration: 0.8,
       ease: 'easeOut',
     },
   },
@@ -31,8 +31,31 @@ export const rotateYLeftToRight = {
     opacity: 0,
     rotateY: 90,
     transition: {
-      duration: 0.3,
+      duration: 0.8,
       ease: 'easeOut',
+    },
+  },
+};
+
+export const fadeIn = {
+  hidden: {
+    opacity: 0,
+    y: 10,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: 'easeIn',
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: 10,
+    transition: {
+      duration: 0.5,
+      ease: 'easeIn',
     },
   },
 };
