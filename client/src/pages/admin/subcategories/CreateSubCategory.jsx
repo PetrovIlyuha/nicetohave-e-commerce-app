@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 import { slideDownFadeIn, slideInLeft } from './animations';
 import AdminNavSidebar from '../../../components/navigation/AdminNavSidebar';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getAllSubCategoriesThunk,
@@ -226,7 +226,7 @@ const CreateCategory = () => {
           </div>
         </div>
       </div>
-      <ToastContainer />
+
       {openDeleteModal && (
         <DeleteModal
           title='Subcategory'
