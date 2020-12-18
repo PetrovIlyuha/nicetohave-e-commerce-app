@@ -16,6 +16,7 @@ import userRouter from './routes/userRoutes.js';
 import categoryRouter from './routes/categoryRoutes.js';
 import subCategoryRouter from './routes/subCategoriesRoutes.js';
 import productRouter from './routes/productRoutes.js';
+import cloudinaryRouter from './routes/cloudinaryRoutes.js';
 
 // middlewares
 app.use(express.json());
@@ -49,6 +50,7 @@ app.use('/api', userRouter);
 app.use('/api', categoryRouter);
 app.use('/api', subCategoryRouter);
 app.use('/api', productRouter);
+app.use('/api', cloudinaryRouter);
 
 // Starting express server
 const PORT = process.env.PORT || 4000;
