@@ -25,6 +25,7 @@ const CreateCategory = () => {
   const { darkMode: darkState } = useSelector(state => state.theme);
   const { categories, deleteMessage } = useSelector(state => state.categories);
   const [loading, setLoading] = useState(false);
+  const [artificialLoading, setArtificialLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
@@ -76,19 +77,31 @@ const CreateCategory = () => {
     };
   }, [createCategoryError, dispatch]);
 
-  const searchCategories = e => {
+  const searchCategories = async e => {
+    await new Promise(res => {
+      setArtificialLoading(true);
+      setTimeout(() => {
+        setArtificialLoading(false);
+        res();
+      }, 500);
+    });
     setSearchTerm(e.target.value);
   };
-  const categoryFilter = category =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase());
 
+  const categoryFilter = category => {
+    return category.name.toLowerCase().includes(searchTerm.toLowerCase());
+  };
   return (
     <div
       className={darkState ? 'container-fluid text-white' : 'container-fluid'}
       style={{ backgroundColor: darkState ? '#432371' : '#F0F3F6' }}>
       <div className='row'>
         <div className='col-md-3'>
-          <AdminNavSidebar fullHeight={searchTerm.length > 0 ? true : false} />
+          <AdminNavSidebar
+            fullHeight={
+              searchTerm.length > 0 || artificialLoading ? true : false
+            }
+          />
         </div>
         <div className='col-md-8 offset-md-1'>
           <div className='container mt-3'>
@@ -109,18 +122,22 @@ const CreateCategory = () => {
               className='mb-4 mt-2'
               placeholder='input search text'
               allowClear
-              onChange={e => searchCategories(e)}
+              onChange={searchCategories}
               enterButton='Search'
               size='large'
             />
-            <CatalogueWithFilter
-              darkState={darkState}
-              pathToItem='category'
-              items={categories}
-              filter={categoryFilter}
-              setOpenDeleteModal={setOpenDeleteModal}
-              setItemToDelete={setCategoryToDelete}
-            />
+            {!artificialLoading ? (
+              <CatalogueWithFilter
+                darkState={darkState}
+                pathToItem='category'
+                items={categories}
+                filter={categoryFilter}
+                setOpenDeleteModal={setOpenDeleteModal}
+                setItemToDelete={setCategoryToDelete}
+              />
+            ) : (
+              <div>Loading...</div>
+            )}
           </div>
         </div>
       </div>
