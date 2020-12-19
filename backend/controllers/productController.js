@@ -47,7 +47,7 @@ export const createProduct = async (req, res) => {
       sold,
       brand: productBrand._id,
       shipping,
-      images: [image],
+      images: [...image],
     }).save();
     if (newProduct) {
       res.status(200).json(newProduct);
