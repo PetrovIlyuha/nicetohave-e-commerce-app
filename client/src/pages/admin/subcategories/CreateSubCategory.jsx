@@ -19,6 +19,7 @@ import DeleteModal from '../../../components/interaction/DeleteModal';
 import CreateSubCategoryForm from './CreateSubCategoryForm';
 import CatalogueWithFilter from '../category/CatalogueWithFilter';
 import SubDropDown from './SubDropDown';
+import { throttle } from '../../../utils/fns';
 const { Search } = Input;
 
 const CreateCategory = () => {
@@ -107,10 +108,14 @@ const CreateCategory = () => {
   const searchCategories = e => {
     setSearchTerm(e.target.value);
   };
+
+  const throttledSearchCategories = throttle(searchCategories, 1400);
+
   const subCategoryFilter = subcategory =>
     subcategory.name.toLowerCase().includes(searchTerm.toLowerCase());
 
   const categoriesNames = categories?.map(cat => cat.name);
+  console.log(searchTerm.length);
   return (
     <div
       className={darkState ? 'container-fluid text-white' : 'container-fluid'}
@@ -205,7 +210,7 @@ const CreateCategory = () => {
                       className='mb-4 mt-2'
                       placeholder='input search text'
                       allowClear
-                      onChange={e => searchCategories(e)}
+                      onChange={e => throttledSearchCategories(e)}
                       enterButton='Search'
                       size='large'
                     />
