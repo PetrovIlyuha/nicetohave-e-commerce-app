@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Image, Input } from 'antd';
+import { Button, Col, Image, Row, Typography } from 'antd';
+import { Link } from 'react-router-dom';
 
 import AdminNavSidebar from '../../../components/navigation/AdminNavSidebar';
 import { toast } from 'react-toastify';
@@ -112,7 +113,10 @@ const CreateProduct = () => {
     };
     await dispatch(createProductThunk(productData, token));
   };
-  console.log(subcategories);
+
+  const isNull = value => typeof value === 'object' && !value;
+  const noCategory = isNull(category);
+
   return (
     <div
       className={darkState ? 'container-fluid text-white' : 'container-fluid'}
@@ -150,14 +154,16 @@ const CreateProduct = () => {
                   </motion.div>
                 ) : (
                   <NoSelectedCategory>
-                    <h3 className={darkState ? 'text-white' : ''}>
+                    <h3
+                      className={darkState ? 'text-white' : ''}
+                      style={{ textAlign: 'center' }}>
                       No category Selected
                     </h3>
                   </NoSelectedCategory>
                 )}
               </div>
             </motion.div>
-            {category && (
+            {!noCategory && subCategoriesFromMain.length > 0 ? (
               <>
                 <Divider
                   style={{
@@ -177,7 +183,6 @@ const CreateProduct = () => {
                     items={subCategoriesFromMain}
                     setSelected={setSelectedSubCategories}
                     placeholder={'Select subcategory(ies)'}
-                    // selectedItems={selectedSubCategories}
                     icon={'📦'}
                   />
                   {selectedSubCategories.length === 1 && (
@@ -191,6 +196,29 @@ const CreateProduct = () => {
                   )}
                 </motion.div>
               </>
+            ) : (
+              <motion.div
+                variants={slideInRight}
+                initial='hidden'
+                animate='show'>
+                <Row>
+                  <Col>
+                    <Typography type='secondary'>
+                      You have not{' '}
+                      {noCategory
+                        ? 'selected category'
+                        : `created any Sub-Categories for ${category?.name}`}
+                    </Typography>
+                    {!noCategory && (
+                      <Link to={`/admin/subcategory/${category?.name}`}>
+                        <Button type='primary' className='mt-3'>
+                          Create Now?
+                        </Button>
+                      </Link>
+                    )}
+                  </Col>
+                </Row>
+              </motion.div>
             )}
             {filteredSubcategories.length > 0 && (
               <CreateProductForm
@@ -211,6 +239,7 @@ const CreateProduct = () => {
 
 const NoSelectedCategory = styled.div`
   height: 200px;
+  width: 200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
