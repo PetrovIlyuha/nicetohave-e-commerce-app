@@ -17,6 +17,7 @@ import DeleteModal from '../../../components/interaction/DeleteModal';
 import CreateCategoryForm from './CreateCategoryForm';
 import CatalogueWithFilter from './CatalogueWithFilter';
 import { slideInLeft } from '../subcategories/animations';
+import { throttle } from '../../../utils/fns';
 const { Search } = Input;
 
 const CreateCategory = () => {
@@ -77,16 +78,11 @@ const CreateCategory = () => {
     };
   }, [createCategoryError, dispatch]);
 
-  const searchCategories = async e => {
-    await new Promise(res => {
-      setArtificialLoading(true);
-      setTimeout(() => {
-        setArtificialLoading(false);
-        res();
-      }, 500);
-    });
+  const searchCategories = e => {
     setSearchTerm(e.target.value);
   };
+
+  const throttleSearch = throttle(searchCategories, 1500, setArtificialLoading);
 
   const categoryFilter = category => {
     return category.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -122,7 +118,7 @@ const CreateCategory = () => {
               className='mb-4 mt-2'
               placeholder='input search text'
               allowClear
-              onChange={searchCategories}
+              onChange={e => throttleSearch(e)}
               enterButton='Search'
               size='large'
             />
