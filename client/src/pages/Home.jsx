@@ -1,13 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import Logo from '../assets/Logo';
 import { toast } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllProducts } from '../redux/product/productSlice';
+import { useSelector } from 'react-redux';
 import Products from './products/Products';
 import { MainPageContainer } from '../styles/HomePageStyles';
 
 const Home = () => {
   const firstVisit = useRef(true);
+  const { darkMode } = useSelector(state => state.theme);
 
   useEffect(() => {
     if (firstVisit.current) {
@@ -19,9 +18,8 @@ const Home = () => {
   }, []);
 
   return (
-    <MainPageContainer>
+    <MainPageContainer darkMode={darkMode}>
       <h2>Products</h2>
-      {/* <Logo /> */}
       <Products />
     </MainPageContainer>
   );

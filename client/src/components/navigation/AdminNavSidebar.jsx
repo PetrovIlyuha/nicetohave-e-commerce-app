@@ -62,7 +62,7 @@ const AdminNavSidebar = ({ fullHeight }) => {
 
         <li className='nav-item'>
           <Link
-            to='/admin/subcategory'
+            to='/admin/subcategory/null'
             className='nav-link'
             style={{ color: darkState ? '#E0CBA8' : 'white' }}>
             <AiFillGold /> Category Management
