@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { Route, Switch } from 'react-router-dom';
@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { logInUser } from './redux/user/userSlice';
 import { getCurrentUser } from './utils/auth';
 import { getAllCategoriesThunk } from './redux/categories/categoriesSlice';
+
 const UpdateSubCategory = React.lazy(() =>
   import('./pages/admin/subcategories/UpdateSubCategory'),
 );
@@ -90,42 +91,47 @@ const App = () => {
     <>
       <Header />
       <Switch>
-        <Route exact path='/' component={Home} />
-        <Route path='/login' component={Login} />
-        <Route path='/register' exact component={Register} />
-        <Route path='/register/complete' component={RegisterCompletion} />
-        <Route path='/forgot-password' component={ForgotPassword} />
-        <PrivateUserRoute path='/forgot-password' component={ForgotPassword} />
-        <PrivateUserRoute path='/user/password' component={Password} />
-        <PrivateUserRoute path='/user/history' component={History} />
-        <PrivateUserRoute path='/user/wishlist' component={Wishlist} />
-        <RestrictedAdminRoute
-          exact
-          path='/admin/dashboard'
-          component={AdminDashboard}
-        />
-        <RestrictedAdminRoute
-          exact
-          path='/admin/category'
-          component={CreateCategory}
-        />
-        <RestrictedAdminRoute
-          path='/admin/category/:slug'
-          component={UpdateCategory}
-        />
-        <RestrictedAdminRoute
-          exact
-          path='/admin/subcategory'
-          component={CreateSubCategory}
-        />
-        <RestrictedAdminRoute
-          path='/admin/subcategory/:slug'
-          component={UpdateSubCategory}
-        />
-        <RestrictedAdminRoute
-          path='/admin/products'
-          component={CreateProduct}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Route exact path='/' component={Home} />
+          <Route path='/login' component={Login} />
+          <Route path='/register' exact component={Register} />
+          <Route path='/register/complete' component={RegisterCompletion} />
+          <Route path='/forgot-password' component={ForgotPassword} />
+          <PrivateUserRoute
+            path='/forgot-password'
+            component={ForgotPassword}
+          />
+          <PrivateUserRoute path='/user/password' component={Password} />
+          <PrivateUserRoute path='/user/history' component={History} />
+          <PrivateUserRoute path='/user/wishlist' component={Wishlist} />
+          <RestrictedAdminRoute
+            exact
+            path='/admin/dashboard'
+            component={AdminDashboard}
+          />
+          <RestrictedAdminRoute
+            exact
+            path='/admin/category'
+            component={CreateCategory}
+          />
+          <RestrictedAdminRoute
+            path='/admin/category/:slug'
+            component={UpdateCategory}
+          />
+          <RestrictedAdminRoute
+            exact
+            path='/admin/subcategory/:categoryName'
+            component={CreateSubCategory}
+          />
+          <RestrictedAdminRoute
+            path='/admin/subcategory/:slug'
+            component={UpdateSubCategory}
+          />
+          <RestrictedAdminRoute
+            path='/admin/products'
+            component={CreateProduct}
+          />
+        </Suspense>
       </Switch>
       <ToastContainer />
     </>
