@@ -43,7 +43,7 @@ const CreateProduct = () => {
   const [subCategoriesFromMain, setSubCategoriesFromMain] = useState([]);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
   const [filteredSubcategories, setFilteredSubcategories] = useState([]);
-
+  const [productImages, setProductImages] = useState([]);
   const categoriesNames = categories?.map(cat => cat.name);
 
   // Color state management
@@ -105,6 +105,7 @@ const CreateProduct = () => {
   const onSubmit = async data => {
     const productData = {
       ...data,
+      images: productImages,
       category: category._id,
       subcategories: filteredSubcategories,
       color: Object.keys(possibleColors).find(
@@ -223,6 +224,8 @@ const CreateProduct = () => {
             {filteredSubcategories.length > 0 && (
               <CreateProductForm
                 onSubmit={onSubmit}
+                setProductImages={setProductImages}
+                productImages={productImages}
                 loading={productCreateLoading}
                 possibleColors={possibleColors}
                 success={productCreateSuccess}
