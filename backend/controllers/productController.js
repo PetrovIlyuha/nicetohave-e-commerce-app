@@ -13,7 +13,7 @@ export const createProduct = async (req, res) => {
     sold,
     brand,
     shipping,
-    image,
+    images,
     subcategories,
     category,
   } = req.body;
@@ -47,7 +47,7 @@ export const createProduct = async (req, res) => {
       sold,
       brand: productBrand._id,
       shipping,
-      images: [...image],
+      images: images,
     }).save();
     if (newProduct) {
       res.status(200).json(newProduct);
