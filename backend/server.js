@@ -4,8 +4,6 @@ import morgan from 'morgan';
 import cors from 'cors';
 import mongoose from 'mongoose';
 dotenv.config();
-import fs from 'fs';
-import path from 'path';
 
 // creating express instance
 const app = express();
@@ -19,7 +17,7 @@ import productRouter from './routes/productRoutes.js';
 import cloudinaryRouter from './routes/cloudinaryRoutes.js';
 
 // middlewares
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(morgan('dev'));
 app.use(cors());
 
