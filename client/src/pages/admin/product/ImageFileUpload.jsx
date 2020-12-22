@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Typography } from 'antd';
+import { Button, Row, Typography } from 'antd';
 
 import { Upload, Modal } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, DownloadOutlined } from '@ant-design/icons';
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -13,25 +13,18 @@ function getBase64(file) {
   });
 }
 
-const FilesUploader = ({ setImages }) => {
+const FilesUploader = ({ setImages, uploadImages, images }) => {
   const [picturesSet, setPicturesSet] = useState({
     previewVisible: false,
     previewImage: '',
     previewTitle: '',
-    fileList: [
-      {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url:
-          'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-    ],
+    fileList: [],
   });
   const { previewVisible, previewImage, fileList, previewTitle } = picturesSet;
 
   useEffect(() => {
-    setImages(fileList);
+    const rawImageData = fileList.map(i => i.originFileObj);
+    setImages(rawImageData);
   }, [fileList]);
 
   const handleCancel = () =>
@@ -51,8 +44,9 @@ const FilesUploader = ({ setImages }) => {
     });
   };
 
-  const handleChange = ({ fileList }) =>
+  const handleChange = ({ fileList }) => {
     setPicturesSet({ ...picturesSet, fileList });
+  };
 
   const uploadButton = (
     <div>
@@ -68,13 +62,19 @@ const FilesUploader = ({ setImages }) => {
         Add Product Images (Max 8)
       </Typography.Text>
       <Upload
-        action='https://www.mocky.io/v2/5cc8019d300000980a055e76'
         listType='picture-card'
         fileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}>
         {fileList.length >= 8 ? null : uploadButton}
       </Upload>
+      <Button
+        type='primary'
+        icon={<DownloadOutlined />}
+        size={20}
+        onClick={() => uploadImages(images)}>
+        Upload
+      </Button>
       <Modal
         visible={previewVisible}
         title={previewTitle}
