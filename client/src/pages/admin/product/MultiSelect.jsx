@@ -22,7 +22,7 @@ const MultiSelect = ({
       optionLabelProp='label'>
       {items.length > 0 &&
         items.map(item => (
-          <Option value={item.name} label={item.name}>
+          <Option value={item.name} key={item.name} label={item.name}>
             <div className='demo-option-label-item'>
               <span role='img' aria-label='China'>
                 {icon}
