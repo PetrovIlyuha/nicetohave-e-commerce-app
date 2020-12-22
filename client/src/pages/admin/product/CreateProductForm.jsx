@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { AiOutlineIssuesClose } from 'react-icons/ai';
-import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
-
 import { useForm } from 'react-hook-form';
 import { Button } from 'antd';
 import { toast } from 'react-toastify';
-import ColorPickerDropdown from './ColorPickerDropdown';
+import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fadeIn, slideInLeft } from '../subcategories/animations';
+import ColorPickerDropdown from './ColorPickerDropdown';
+
+import { AiOutlineIssuesClose } from 'react-icons/ai';
+import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
+
+import FileResizer from 'react-image-file-resizer';
+import FilesUploader from './ImageFileUpload';
 
 const CreateCategoryForm = ({
   onSubmit,
@@ -17,8 +21,13 @@ const CreateCategoryForm = ({
   possibleColors,
   onColorSelectChange,
   selectedColor,
+  setProductImages,
+  productImages,
 }) => {
   const { darkMode } = useSelector(state => state.theme);
+  const {
+    user: { token },
+  } = useSelector(state => state.user);
   const { register, handleSubmit, errors, reset, watch, getValues } = useForm();
   const titleError =
     watch('title', '').length < 3 || watch('title', '').length > 40;
@@ -29,9 +38,8 @@ const CreateCategoryForm = ({
   const watchQuantity = watch('quantity', 0) <= 0;
   const watchSold = watch('sold', 0) <= 0;
   const watchBrand = watch('brand', '').length <= 2;
-  const watchImage = watch('image', '');
-  const urlPattern = /^https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/;
 
+  const [images, setImages] = useState([]);
   const [errorIcons, setErrorIcons] = useState({
     title: false,
     description: false,
@@ -41,15 +49,36 @@ const CreateCategoryForm = ({
     brand: false,
     image: false,
   });
-  const {
-    title,
-    description,
-    price,
-    quantity,
-    sold,
-    brand,
-    image,
-  } = errorIcons;
+  const { title, description, price, quantity, sold, brand } = errorIcons;
+
+  const cloudinaryResizeUpload = fileList => {
+    const loadedImages = [];
+    if (fileList.length > 0) {
+      fileList.forEach(file => {
+        FileResizer.imageFileResizer(
+          file,
+          480,
+          360,
+          'JPEG',
+          100,
+          0,
+          uri => {
+            axios
+              .post(
+                `${process.env.REACT_APP_API}/upload-images`,
+                { image: uri },
+                { headers: { token } },
+              )
+              .then(res => {
+                loadedImages.push(res.data);
+              });
+          },
+          'base64',
+        );
+      });
+    }
+    setProductImages([...loadedImages]);
+  };
 
   useEffect(() => {
     if (errors.title) {
@@ -67,7 +96,7 @@ const CreateCategoryForm = ({
 
   useEffect(() => {
     if (success) {
-      console.log('product has been created!*****');
+      console.log('product has been created!');
       reset();
     }
   }, [success, reset]);
@@ -81,8 +110,8 @@ const CreateCategoryForm = ({
         exit='exit'>
         <form className='d-flex flex-column form-group container'>
           <div className='row'>
+            {/* Title field */}
             <div className='col-md-6'>
-              {/* Title field */}
               <label htmlFor='title' class='form-label mt-3'>
                 Product Title
                 {title ? (
@@ -313,33 +342,19 @@ const CreateCategoryForm = ({
                 />
               </div>
             </div>
-            {/* Image field */}
-            <div className='col-12'>
-              <label htmlFor='image' class='form-label mt-5'>
-                New Product Image URL
-                {!urlPattern.test(watchImage) ? (
-                  <AiOutlineIssuesClose size={20} color='red' />
-                ) : (
-                  <IoMdCheckmarkCircleOutline size={20} color='green' />
-                )}
-              </label>
-              <input
-                name='image'
-                class='form-control'
-                id='image'
-                style={{
-                  backgroundColor: darkMode ? 'whitesmoke' : 'lightgrey',
-                }}
-                ref={register({ required: true })}
+            <div className='col-12 mt-4'>
+              <FilesUploader
+                setImages={setImages}
+                images={images}
+                uploadImages={cloudinaryResizeUpload}
               />
-              {errors.image && 'Image url is not valid...'}
             </div>
             {/* EOF Image field */}
             <Button
               onClick={handleSubmit(onSubmit)}
               type='primary'
               loading={loading}
-              className='my-5'>
+              className='my-5 ml-3'>
               Create
             </Button>
           </div>
