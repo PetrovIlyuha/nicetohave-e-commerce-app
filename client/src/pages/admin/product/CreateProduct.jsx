@@ -45,7 +45,6 @@ const CreateProduct = () => {
   const [filteredSubcategories, setFilteredSubcategories] = useState([]);
   const [productImages, setProductImages] = useState([]);
   const categoriesNames = categories?.map(cat => cat.name);
-
   // Color state management
   const [possibleColors, setPossibleColors] = useState(productColors);
 
