@@ -20,9 +20,11 @@ import CreateSubCategoryForm from './CreateSubCategoryForm';
 import CatalogueWithFilter from '../category/CatalogueWithFilter';
 import SubDropDown from './SubDropDown';
 import { throttle } from '../../../utils/fns';
+import { withRouter } from 'react-router-dom';
 const { Search } = Input;
 
-const CreateCategory = () => {
+const CreateSubCategory = ({ match }) => {
+  const { categoryName } = match.params;
   const dispatch = useDispatch();
   const { user } = useSelector(state => state.user);
   const { darkMode: darkState } = useSelector(state => state.theme);
@@ -44,6 +46,12 @@ const CreateCategory = () => {
   const [revalidateCategories, setRevalidateCategories] = useState(false);
   const [subsLimitedBySelected, setSubsLimitedBySelected] = useState([]);
   const [resetForm, setResetForm] = useState(false);
+
+  useEffect(() => {
+    if (categoryName) {
+      setSelectedCategory(categoryName);
+    }
+  }, [categoryName, categories]);
 
   useEffect(() => {
     dispatch(getAllSubCategoriesThunk());
@@ -115,7 +123,7 @@ const CreateCategory = () => {
     subcategory.name.toLowerCase().includes(searchTerm.toLowerCase());
 
   const categoriesNames = categories?.map(cat => cat.name);
-  console.log(searchTerm.length);
+
   return (
     <div
       className={darkState ? 'container-fluid text-white' : 'container-fluid'}
@@ -255,4 +263,4 @@ const NoSelectedCategory = styled.div`
   margin: 2rem 0;
 `;
 
-export default CreateCategory;
+export default withRouter(CreateSubCategory);
