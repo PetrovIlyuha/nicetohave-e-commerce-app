@@ -13,6 +13,7 @@ const subCategoriesSlice = createSlice({
     updateSuccess: false,
     productCreateError: null,
     all: [],
+    productForCategory: [],
   },
   reducers: {
     createProductLoading: (state, action) => {
@@ -39,6 +40,9 @@ const subCategoriesSlice = createSlice({
     setAllProductsInState: (state, { payload }) => {
       state.all = payload;
     },
+    setProductsByCategory: (state, { payload }) => {
+      state.productForCategory = payload;
+    },
   },
 });
 
@@ -49,6 +53,7 @@ export const {
   productCreateFailed,
   clearCreateProductState,
   setAllProductsInState,
+  setProductsByCategory,
 } = subCategoriesSlice.actions;
 
 export const createProductThunk = (product, token) => async dispatch => {
@@ -76,8 +81,17 @@ export const getCategoryByIdThunk = id => async dispatch => {
   dispatch(setMainCategory(data));
 };
 
-export const getAllProducts = () => async dispatch => {
-  const { data } = await axios.get(`${process.env.REACT_APP_API}/products`);
+export const getAllProductsByCount = count => async dispatch => {
+  const { data } = await axios.get(
+    `${process.env.REACT_APP_API}/products/${count}`,
+  );
   dispatch(setAllProductsInState(data));
+};
+
+export const getProductsByCategoryId = id => async dispatch => {
+  const { data } = await axios.get(
+    `${process.env.REACT_APP_API}/products-by-category/${id}`,
+  );
+  dispatch(setProductsByCategory(data));
 };
 export default subCategoriesSlice.reducer;
