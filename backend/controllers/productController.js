@@ -71,6 +71,14 @@ export const createProduct = async (req, res) => {
 export const getAllProducts = async (req, res) => {
   let products = await Product.find({})
     .populate('category subcategories')
-    .populate('brand');
+    .populate('brand')
+    .limit(+req.params.count)
+    .sort({ createdAt: -1 });
   res.status(200).json(products);
+};
+
+export const getProductsByCategoryId = async (req, res) => {
+  const categoryId = req.params.id;
+  let productsByCategory = await Product.find({ category: categoryId });
+  res.json(productsByCategory);
 };
