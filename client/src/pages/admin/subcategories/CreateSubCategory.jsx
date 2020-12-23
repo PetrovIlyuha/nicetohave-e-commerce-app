@@ -21,6 +21,7 @@ import CatalogueWithFilter from '../category/CatalogueWithFilter';
 import SubDropDown from './SubDropDown';
 import { throttle } from '../../../utils/fns';
 import { withRouter } from 'react-router-dom';
+import { NoSelectedCategory } from '../../../styles/generics';
 const { Search } = Input;
 
 const CreateSubCategory = ({ match }) => {
@@ -69,7 +70,7 @@ const CreateSubCategory = ({ match }) => {
     setShowedSelectedCategory(
       categories.find(c => c.name === selectedCategory),
     );
-  }, [selectedCategory, dispatch, categories]);
+  }, [selectedCategory, categories]);
 
   useEffect(() => {
     dispatch(getAllSubCategoriesThunk());
@@ -176,7 +177,9 @@ const CreateSubCategory = ({ match }) => {
                     </motion.div>
                   ) : (
                     <NoSelectedCategory>
-                      <h3 className={darkState ? 'text-white' : ''}>
+                      <h3
+                        className={darkState ? 'text-white' : ''}
+                        style={{ textAlign: 'center' }}>
                         No category Selected
                       </h3>
                     </NoSelectedCategory>
@@ -252,15 +255,5 @@ const CreateSubCategory = ({ match }) => {
     </div>
   );
 };
-
-const NoSelectedCategory = styled.div`
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border: 2px dotted black;
-  margin: 2rem 0;
-`;
 
 export default withRouter(CreateSubCategory);

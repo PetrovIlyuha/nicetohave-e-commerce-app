@@ -37,7 +37,7 @@ const AdminNavSidebar = ({ fullHeight }) => {
         </li>
         <li className='nav-item'>
           <Link
-            to='/admin/product'
+            to='/admin/product-management'
             className='nav-link'
             style={{ color: darkState ? '#E0CBA8' : 'white' }}>
             <SiCodefactor /> Products Management
