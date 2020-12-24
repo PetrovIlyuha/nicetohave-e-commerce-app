@@ -20,6 +20,7 @@ import SubDropDown from '../subcategories/SubDropDown';
 import styled from 'styled-components';
 import MultiSelect from './MultiSelect';
 import { getAllSubCategoriesThunk } from '../../../redux/subcategories/subCategoriesSlice';
+import { isNull } from '../../../utils/fns';
 
 const CreateProduct = () => {
   const dispatch = useDispatch();
@@ -114,7 +115,6 @@ const CreateProduct = () => {
     await dispatch(createProductThunk(productData, token));
   };
 
-  const isNull = value => typeof value === 'object' && !value;
   const noCategory = isNull(category);
 
   return (
