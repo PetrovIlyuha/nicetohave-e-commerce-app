@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
-import { rotateYLeftToRight, zoomIn } from '../admin/subcategories/animations';
-import { Card, Avatar, Col, Row } from 'antd';
+import { rotateYLeftToRight } from '../admin/subcategories/animations';
+import { Card, Avatar, Col, Row, Carousel } from 'antd';
 import {
   EditOutlined,
   EllipsisOutlined,
@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllProducts } from '../../redux/product/productSlice';
+import { getAllProductsByCount } from '../../redux/product/productSlice';
 
 const { Meta } = Card;
 
@@ -19,34 +19,36 @@ const Products = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     if (all.length === 0) {
-      dispatch(getAllProducts());
+      dispatch(getAllProductsByCount(2));
     }
   }, [dispatch]);
+
   return (
     <motion.div
       variants={rotateYLeftToRight}
       initial='hidden'
       animate='show'
-      className='container-fluid'>
-      <Row
-        gutter={[10, { xs: 8, sm: 10, md: 12, lg: 16 }]}
-        justify='space-between'>
+      className='ml-5'>
+      <Row gutter={[48, 48]} justify='center'>
         {all.map(product => (
           <Col
             className='gutter-row'
             xl={6}
             md={12}
             sm={24}
+            gutter={{ xs: 32, sm: 14, md: 24, lg: 0 }}
             style={{ marginBottom: 10 }}
             key={product._id}>
             <Card
-              style={{ width: 300, overflow: 'hidden' }}
               cover={
-                <ProductCardImage
-                  alt={product.title}
-                  style={{ height: '280px' }}
-                  src={product.images[0]}
-                />
+                <Carousel
+                  autoplay
+                  autoplaySpeed={8000}
+                  dots={{ padding: '2rem', color: 'red' }}>
+                  {product.images.map((img, idx) => (
+                    <img key={idx} src={img.url} />
+                  ))}
+                </Carousel>
               }
               actions={[
                 <SettingOutlined key='setting' />,
@@ -57,7 +59,7 @@ const Products = () => {
                 style={{ overflow: 'hidden' }}
                 avatar={<Avatar src={product.category.image} />}
                 title={product.title}
-                description={product.description}
+                description={product.description.slice(0, 70).concat('...')}
               />
             </Card>
           </Col>
