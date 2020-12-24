@@ -13,3 +13,5 @@ export const throttle = (callback, cooldown, setter = () => {}) => {
     }, cooldown);
   };
 };
+
+export const isNull = value => typeof value === 'object' && !value;
