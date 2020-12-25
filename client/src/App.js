@@ -49,6 +49,9 @@ const CreateProduct = React.lazy(() =>
 const ManageProducts = React.lazy(() =>
   import('./pages/admin/product/ManageProducts'),
 );
+const UpdateProduct = React.lazy(() =>
+  import('./pages/admin/product/UpdateProduct.jsx'),
+);
 
 Sentry.init({
   dsn:
@@ -131,12 +134,16 @@ const App = () => {
             component={UpdateSubCategory}
           />
           <RestrictedAdminRoute
-            path='/admin/products'
+            path='/admin/products/:defined_category'
             component={CreateProduct}
           />
           <RestrictedAdminRoute
             path='/admin/product-management'
             component={ManageProducts}
+          />
+          <RestrictedAdminRoute
+            path='/admin/product/:slug'
+            component={UpdateProduct}
           />
         </Suspense>
       </Switch>
