@@ -82,3 +82,9 @@ export const getProductsByCategoryId = async (req, res) => {
   let productsByCategory = await Product.find({ category: categoryId });
   res.json(productsByCategory);
 };
+
+export const getProductBySlug = async (req, res) => {
+  const slug = req.params.slug;
+  let product = await Product.find({ slug });
+  res.json(product);
+};
