@@ -24,6 +24,8 @@ const StyledNav = styled.nav`
 
 const AdminNavSidebar = ({ fullHeight }) => {
   const { darkMode: darkState } = useSelector(state => state.theme);
+  const { categories } = useSelector(state => state.categories);
+
   return (
     <StyledNav darkState={darkState} fullHeight={fullHeight}>
       <ul className='nav flex-column justify-center'>
@@ -45,7 +47,7 @@ const AdminNavSidebar = ({ fullHeight }) => {
         </li>
         <li className='nav-item'>
           <Link
-            to='/admin/products'
+            to={`/admin/products/${categories[0].name}`}
             className='nav-link'
             style={{ color: darkState ? '#E0CBA8' : 'white' }}>
             <AiTwotoneContainer /> Products Creation
