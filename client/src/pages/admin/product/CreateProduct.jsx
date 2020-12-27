@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Image, Row, Typography } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useParams, withRouter } from 'react-router-dom';
 
 import AdminNavSidebar from '../../../components/navigation/AdminNavSidebar';
 import { toast } from 'react-toastify';
@@ -22,8 +22,9 @@ import MultiSelect from './MultiSelect';
 import { getAllSubCategoriesThunk } from '../../../redux/subcategories/subCategoriesSlice';
 import { isNull } from '../../../utils/fns';
 
-const CreateProduct = () => {
+const CreateProduct = ({ match }) => {
   const dispatch = useDispatch();
+  const params = useParams();
   const {
     category,
     productCreateSuccess,
@@ -39,7 +40,9 @@ const CreateProduct = () => {
     user: { token },
   } = useSelector(state => state.user);
 
-  const [mainCategorySelect, setMainCategorySelect] = useState(null);
+  const [mainCategorySelect, setMainCategorySelect] = useState(
+    params.defined_category || null,
+  );
 
   const [subCategoriesFromMain, setSubCategoriesFromMain] = useState([]);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
@@ -250,4 +253,4 @@ const NoSelectedCategory = styled.div`
   margin: 2rem 0;
 `;
 
-export default CreateProduct;
+export default withRouter(CreateProduct);
