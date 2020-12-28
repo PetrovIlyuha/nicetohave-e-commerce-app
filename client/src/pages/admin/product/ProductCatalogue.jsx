@@ -12,16 +12,9 @@ import {
   Space,
 } from 'antd';
 
-import { BiTrashAlt } from 'react-icons/bi';
-import { GrUpdate } from 'react-icons/gr';
-import NoCategoryImage from '../../../assets/categories-images/unordered.jpg';
 import { motion } from 'framer-motion';
 import { zoomIn } from '../subcategories/animations';
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 const { Meta } = Card;
 
 const ProductCatalogue = ({
@@ -64,9 +57,23 @@ const ProductCatalogue = ({
                 </Carousel>
               }
               actions={[
-                <SettingOutlined key='setting' />,
-                <EditOutlined key='edit' />,
-                <EllipsisOutlined key='ellipsis' />,
+                <Link to={`/admin/${pathToItem}/${product.slug}`}>
+                  <EditOutlined
+                    type='primary'
+                    onClick={() =>
+                      console.log(`/admin/${pathToItem}/${product.slug}`)
+                    }
+                    key='update'>
+                    Update
+                  </EditOutlined>
+                </Link>,
+                <DeleteOutlined
+                  onClick={() => {
+                    setOpenDeleteModal(true);
+                    setItemToDelete(product);
+                  }}
+                  key='delete'
+                />,
               ]}>
               <Meta
                 style={{ overflow: 'hidden' }}
@@ -75,66 +82,6 @@ const ProductCatalogue = ({
                 description={product.description.slice(0, 40).concat('...')}
               />
             </Card>
-            {/* <Card
-            hoverable
-            style={{
-              width: 200,
-              background: darkState ? '#B9E0B5' : 'white',
-            }}
-            cover={
-              <motion.img
-                variants={zoomIn}
-                initial='hidden'
-                animate='show'
-                style={{
-                  backgroundSize: 'cover',
-                  maxHeight: 190,
-                  overflow: 'hidden',
-                }}
-                alt={item.name}
-                src={item.image || NoCategoryImage}
-              />
-            }>
-            <Meta title={`${item.name}`} style={{ color: 'white' }} />
-            <Divider orientation='center' style={{ fontSize: 10 }}>
-              Actions
-            </Divider>
-            <div>
-              <Link to={`/admin/${pathToItem}/${item.slug}`}>
-                <Button
-                  type='primary'
-                  onClick={() =>
-                    console.log(`/admin/${pathToItem}/${item.slug}`)
-                  }
-                  block
-                  style={{ marginBottom: 10 }}
-                  icon={
-                    <GrUpdate
-                      color='red'
-                      size='12'
-                      style={{ marginRight: 5 }}
-                    />
-                  }>
-                  Update
-                </Button>
-              </Link>
-              <Button
-                type='danger'
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-                onClick={() => {
-                  setOpenDeleteModal(true);
-                  setItemToDelete(item);
-                }}
-                block
-                icon={<BiTrashAlt size='15' style={{ marginRight: 6 }} />}>
-                Delete
-              </Button>
-            </div>
-          </Card> */}
           </Col>
         ))
       )}
