@@ -88,3 +88,14 @@ export const getProductBySlug = async (req, res) => {
   let product = await Product.find({ slug });
   res.json(product);
 };
+
+export const deleteProductById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    let productToDelete = await Product.findOneAndRemove({ _id: id }).exec();
+    res.status(200).json({ product: productToDelete });
+  } catch (err) {
+    console.error(err);
+    return res.status(400).send('Product deletion failed!');
+  }
+};
