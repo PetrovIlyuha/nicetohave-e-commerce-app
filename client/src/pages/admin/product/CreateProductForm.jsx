@@ -37,7 +37,7 @@ const CreateCategoryForm = ({
   const priceError = watch('price', 0) <= 0;
   const watchQuantity = watch('quantity', 0) <= 0;
   const watchSold = watch('sold', 0) <= 0;
-  const watchBrand = watch('brand', '').length <= 2;
+  const watchBrand = watch('brand', '').length < 2;
 
   const [images, setImages] = useState([]);
   const [errorIcons, setErrorIcons] = useState({
