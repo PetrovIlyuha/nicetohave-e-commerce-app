@@ -15,6 +15,7 @@ const subCategoriesSlice = createSlice({
     all: [],
     productForCategory: [],
     productBySlug: null,
+    removedProduct: null,
   },
   reducers: {
     createProductLoading: (state, action) => {
@@ -47,6 +48,12 @@ const subCategoriesSlice = createSlice({
     setOneProductBySlug: (state, { payload }) => {
       state.productBySlug = payload;
     },
+    setRemovedProduct: (state, { payload }) => {
+      state.removedProduct = payload;
+    },
+    clearRemovedProduct: (state, { payload }) => {
+      state.removedProduct = null;
+    },
   },
 });
 
@@ -59,6 +66,8 @@ export const {
   setAllProductsInState,
   setProductsByCategory,
   setOneProductBySlug,
+  setRemovedProduct,
+  clearRemovedProduct,
 } = subCategoriesSlice.actions;
 
 export const createProductThunk = (product, token) => async dispatch => {
@@ -105,6 +114,18 @@ export const getOneProductBySlug = slug => async dispatch => {
     `${process.env.REACT_APP_API}/product-by-slug/${slug}`,
   );
   dispatch(setOneProductBySlug(data));
+};
+
+export const deleteProductById = (id, token) => async dispatch => {
+  const { data } = await axios.delete(
+    `${process.env.REACT_APP_API}/delete-product/${id}`,
+    {
+      headers: {
+        token,
+      },
+    },
+  );
+  dispatch(setRemovedProduct(data));
 };
 
 export default subCategoriesSlice.reducer;
