@@ -1,9 +1,13 @@
 import { Button, Divider, Image, Input } from 'antd';
 import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AdminNavSidebar from '../../../components/navigation/AdminNavSidebar';
-import { getProductsByCategoryId } from '../../../redux/product/productSlice';
+import {
+  getProductsByCategoryId,
+  clearRemovedProduct,
+} from '../../../redux/product/productSlice';
 import { NoSelectedCategory } from '../../../styles/generics';
 import { slideInLeft } from '../subcategories/animations';
 import SubDropDown from '../subcategories/SubDropDown';
@@ -11,13 +15,17 @@ import { isNull, throttle } from '../../../utils/fns';
 import ProductCatalogue from './ProductCatalogue';
 import { Link } from 'react-router-dom';
 import DeleteModal from '../../../components/interaction/DeleteModal';
+import useShowSideMenu from '../../../hooks/useShowSideMenu';
+import { MenuOutlined } from '@ant-design/icons';
 const { Search } = Input;
 
 const ManageProducts = () => {
   const dispatch = useDispatch();
   const { darkMode } = useSelector(state => state.theme);
   const { categories } = useSelector(state => state.categories);
-  const { productForCategory } = useSelector(state => state.products);
+  const { productForCategory, removedProduct } = useSelector(
+    state => state.products,
+  );
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [fakeLoading, setFakeLoading] = useState(false);
   const [showedSelectedCategory, setShowedSelectedCategory] = useState(null);
@@ -26,6 +34,8 @@ const ManageProducts = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState();
   const [revalidateProducts, setRevalidateProducts] = useState(false);
 
+  const [showSidebar, setShowSidebar, showMenuIcon] = useShowSideMenu();
+
   useEffect(() => {
     const actualCategory = categories.find(c => c.name === selectedCategory);
     if (actualCategory) {
@@ -33,6 +43,24 @@ const ManageProducts = () => {
       dispatch(getProductsByCategoryId(actualCategory._id));
     }
   }, [selectedCategory, categories]);
+
+  useEffect(() => {
+    if (removedProduct) {
+      toast.success(
+        `Product ${removedProduct.title} was removed from DataBase!`,
+      );
+    }
+    return () => {
+      dispatch(clearRemovedProduct());
+    };
+  }, [removedProduct]);
+
+  useEffect(() => {
+    const actualCategory = categories.find(c => c.name === selectedCategory);
+    if (revalidateProducts) {
+      dispatch(getProductsByCategoryId(actualCategory._id));
+    }
+  }, [dispatch, revalidateProducts]);
 
   const categoriesNames = categories?.map(cat => cat.name);
 
@@ -61,9 +89,17 @@ const ManageProducts = () => {
               !productForCategory.length ||
               searchTerm.length > 0
             }
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar}
           />
         </div>
         <div className='col-md-8 offset-md-1'>
+          {showMenuIcon && (
+            <MenuOutlined
+              style={{ position: 'absolute', right: 40, top: 20 }}
+              onClick={() => setShowSidebar(true)}
+            />
+          )}
           <div className='container mt-3'>
             <motion.h2
               variants={slideInLeft}
