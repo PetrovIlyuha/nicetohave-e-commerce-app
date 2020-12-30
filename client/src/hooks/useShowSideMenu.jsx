@@ -12,13 +12,8 @@ const useShowSideMenu = () => {
     } else {
       setShowMenuIcon(false);
     }
-    if (showSidebar) {
-      setShowMenuIcon(false);
-    } else {
-      setShowMenuIcon(true);
-    }
   }, [width]);
-  return [showSidebar, setShowSidebar, showMenuIcon, setShowMenuIcon];
+  return [showSidebar, setShowSidebar, showMenuIcon];
 };
 
 export default useShowSideMenu;
