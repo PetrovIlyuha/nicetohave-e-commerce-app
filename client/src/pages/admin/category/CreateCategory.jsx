@@ -18,6 +18,8 @@ import CreateCategoryForm from './CreateCategoryForm';
 import CatalogueWithFilter from './CatalogueWithFilter';
 import { slideInLeft } from '../subcategories/animations';
 import { throttle } from '../../../utils/fns';
+import useShowSideMenu from '../../../hooks/useShowSideMenu';
+import { MenuOutlined } from '@ant-design/icons';
 const { Search } = Input;
 
 const CreateCategory = () => {
@@ -87,6 +89,8 @@ const CreateCategory = () => {
   const categoryFilter = category => {
     return category.name.toLowerCase().includes(searchTerm.toLowerCase());
   };
+
+  const [showSidebar, setShowSidebar, showMenuIcon] = useShowSideMenu();
   return (
     <div
       className={darkState ? 'container-fluid text-white' : 'container-fluid'}
@@ -94,12 +98,20 @@ const CreateCategory = () => {
       <div className='row'>
         <div className='col-md-3'>
           <AdminNavSidebar
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar}
             fullHeight={
               searchTerm.length > 0 || artificialLoading ? true : false
             }
           />
         </div>
         <div className='col-md-8 offset-md-1'>
+          {showMenuIcon && (
+            <MenuOutlined
+              style={{ position: 'absolute', right: 40, top: 20 }}
+              onClick={() => setShowSidebar(true)}
+            />
+          )}
           <div className='container mt-3'>
             <motion.h2
               variants={slideInLeft}
