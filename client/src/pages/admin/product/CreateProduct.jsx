@@ -19,8 +19,10 @@ import { productColors } from './productColors';
 import SubDropDown from '../subcategories/SubDropDown';
 import styled from 'styled-components';
 import MultiSelect from './MultiSelect';
+import { MenuOutlined } from '@ant-design/icons';
 import { getAllSubCategoriesThunk } from '../../../redux/subcategories/subCategoriesSlice';
 import { isNull } from '../../../utils/fns';
+import useShowSideMenu from '../../../hooks/useShowSideMenu';
 
 const CreateProduct = ({ match }) => {
   const dispatch = useDispatch();
@@ -105,6 +107,8 @@ const CreateProduct = ({ match }) => {
     }
   }, [productCreateError, dispatch]);
 
+  const [showSidebar, setShowSidebar, showMenuIcon] = useShowSideMenu();
+
   const onSubmit = async data => {
     const productData = {
       ...data,
@@ -126,9 +130,19 @@ const CreateProduct = ({ match }) => {
       style={{ backgroundColor: darkState ? '#432371' : '#F0F3F6' }}>
       <div className='row'>
         <div className='col-md-3'>
-          <AdminNavSidebar fullHeight={!selectedSubCategories.length} />
+          <AdminNavSidebar
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar}
+            fullHeight={!selectedSubCategories.length}
+          />
         </div>
         <div className='col-md-8 offset-md-1'>
+          {showMenuIcon && (
+            <MenuOutlined
+              style={{ position: 'absolute', right: 40, top: 20 }}
+              onClick={() => setShowSidebar(true)}
+            />
+          )}
           <div className='container mt-3'>
             <motion.h2
               variants={slideInLeft}
