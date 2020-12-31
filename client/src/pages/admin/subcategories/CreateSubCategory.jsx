@@ -22,6 +22,8 @@ import SubDropDown from './SubDropDown';
 import { throttle } from '../../../utils/fns';
 import { withRouter } from 'react-router-dom';
 import { NoSelectedCategory } from '../../../styles/generics';
+import { MenuOutlined } from '@ant-design/icons';
+import useShowSideMenu from '../../../hooks/useShowSideMenu';
 const { Search } = Input;
 
 const CreateSubCategory = ({ match }) => {
@@ -125,6 +127,7 @@ const CreateSubCategory = ({ match }) => {
 
   const categoriesNames = categories?.map(cat => cat.name);
 
+  const [showSidebar, setShowSidebar, showMenuIcon] = useShowSideMenu();
   return (
     <div
       className={darkState ? 'container-fluid text-white' : 'container-fluid'}
@@ -132,6 +135,8 @@ const CreateSubCategory = ({ match }) => {
       <div className='row'>
         <div className='col-md-3'>
           <AdminNavSidebar
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar}
             fullHeight={
               searchTerm.length > 0 ||
               subcategories.length === 0 ||
@@ -142,6 +147,12 @@ const CreateSubCategory = ({ match }) => {
           />
         </div>
         <div className='col-md-8 offset-md-1'>
+          {showMenuIcon && (
+            <MenuOutlined
+              style={{ position: 'absolute', right: 40, top: 20 }}
+              onClick={() => setShowSidebar(true)}
+            />
+          )}
           <div className='container mt-3'>
             <motion.h2
               variants={slideInLeft}
