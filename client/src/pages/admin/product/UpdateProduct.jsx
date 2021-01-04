@@ -1,43 +1,60 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AdminNavSidebar from '../../../components/navigation/AdminNavSidebar';
-import { Image, Col, Row, Typography } from 'antd';
+import { Image, Col, Row, Typography, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOneProductBySlug } from '../../../redux/product/productSlice';
+import {
+  getCategoryByIdThunk,
+  getOneProductBySlug,
+} from '../../../redux/product/productSlice';
 import { fadeIn } from '../subcategories/animations';
 import { motion } from 'framer-motion';
 import './UpdateProduct.css';
 import { MenuOutlined } from '@ant-design/icons';
 import useShowSideMenu from '../../../hooks/useShowSideMenu';
 import styled from 'styled-components';
+import DeleteModal from '../../../components/interaction/DeleteModal';
+import SubDropDown from '../subcategories/SubDropDown';
+import { getAllCategoriesThunk } from '../../../redux/categories/categoriesSlice';
+import { getAllSubCategoriesThunk } from '../../../redux/subcategories/subCategoriesSlice';
 const { Title } = Typography;
 
 const UpdateProduct = ({ match }) => {
   const { slug } = match.params;
-  const { productBySlug } = useSelector(state => state.products);
+  const { productBySlug, category } = useSelector(state => state.products);
+
   const dispatch = useDispatch();
+  const { categories } = useSelector(state => state.categories);
+  const { subcategories } = useSelector(state => state.subcategories);
+  const [subCategoriesFromMain, setSubCategoriesFromMain] = useState([]);
+  const [localData, setLocalData] = useState({});
+  const [newCategory, defineNewCategory] = useState(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [updateDescription, setUpdateDescription] = useState(false);
-  const [localData, setLocalData] = useState({
-    description: '',
-    price: 0,
-    images: [],
-  });
+  const [imageToDelete, setImageToDelete] = useState(null);
+  const [revalidateProduct, setRevalidateProduct] = useState(false);
 
   const [showSidebar, setShowSidebar, showMenuIcon] = useShowSideMenu();
-
+  const categoriesNames = categories?.map(cat => cat.name);
   const descriptionRef = useRef();
-  useEffect(async () => {
+
+  useEffect(() => {
+    dispatch(getAllCategoriesThunk());
+    dispatch(getAllSubCategoriesThunk());
+  }, [dispatch]);
+
+  const getProductBySlug = async slug => {
     await dispatch(getOneProductBySlug(slug));
     if (productBySlug) {
-      setLocalData({
-        ...localData,
-        description: productBySlug[0]?.description,
-        price: productBySlug[0]?.price,
-        images: productBySlug[0]?.images,
-      });
-      console.log(productBySlug[0]);
+      setLocalData(productBySlug[0]);
     }
+  };
+  useEffect(() => {
+    getProductBySlug(slug);
   }, [slug]);
-  console.log(productBySlug[0]);
+
+  useEffect(() => {
+    if (revalidateProduct) getProductBySlug(slug);
+  }, [revalidateProduct]);
 
   useEffect(() => {
     if (descriptionRef.current) {
@@ -45,7 +62,28 @@ const UpdateProduct = ({ match }) => {
     }
   }, [descriptionRef]);
 
+  useEffect(() => {
+    if (newCategory) {
+      const newParentCategory = categories.find(
+        cat => cat.name === newCategory,
+      );
+      dispatch(getCategoryByIdThunk(newParentCategory._id));
+    }
+  }, [dispatch, categories]);
+
+  useEffect(() => {
+    if (category) {
+      let subsPartition = subcategories.filter(
+        cat => cat.parent === category?._id,
+      );
+      setSubCategoriesFromMain(subsPartition);
+    }
+  }, [category, subcategories]);
+
   const { description, price, images } = localData;
+
+  console.log(category);
+  console.log('Subcategories from new parent', subCategoriesFromMain);
 
   return (
     <Row>
@@ -70,6 +108,13 @@ const UpdateProduct = ({ match }) => {
                 />
               )}
             </div>
+            <StyledMediumBox>
+              <SubDropDown
+                label='Need to Change Main Category?'
+                items={categoriesNames}
+                selectItem={defineNewCategory}
+              />
+            </StyledMediumBox>
             <Row className='image__gallery--update'>
               {images?.map(image => (
                 <Col
@@ -79,6 +124,20 @@ const UpdateProduct = ({ match }) => {
                   sm={24}
                   key={image.public_id}>
                   <Image width={200} src={image.url} />
+                  <ImageActionButtons justify='between'>
+                    <Button
+                      type='danger'
+                      size='small'
+                      onClick={() => {
+                        setOpenDeleteModal(true);
+                        setImageToDelete(image);
+                      }}>
+                      Delete
+                    </Button>
+                    <Button type='primary' size='small'>
+                      Upload & Replace
+                    </Button>
+                  </ImageActionButtons>
                 </Col>
               ))}
             </Row>
@@ -116,6 +175,15 @@ const UpdateProduct = ({ match }) => {
           </div>
         </div>
       )}
+      {openDeleteModal && (
+        <DeleteModal
+          title='Image'
+          item={imageToDelete}
+          onModalOpen={openDeleteModal}
+          onModalClose={() => setOpenDeleteModal(false)}
+          updateItems={() => setRevalidateProduct(true)}
+        />
+      )}
     </Row>
   );
 };
@@ -126,6 +194,15 @@ const StyledTypography = styled(Typography)`
     border: 1px dotted grey;
     cursor: pointer;
   }
+`;
+
+const ImageActionButtons = styled(Row)`
+  position: absolute;
+  top: 140;
+`;
+
+const StyledMediumBox = styled.div`
+  padding: 2rem;
 `;
 
 export default UpdateProduct;
