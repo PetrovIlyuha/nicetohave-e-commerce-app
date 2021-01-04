@@ -5,7 +5,10 @@ import 'react-responsive-modal/styles.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteOneCategoryBySlugThunk } from '../../redux/categories/categoriesSlice';
 import { deleteOneSubCategoryBySlug } from '../../redux/subcategories/subCategoriesSlice';
-import { deleteProductById } from '../../redux/product/productSlice';
+import {
+  deleteProductById,
+  removeImageCloudAndDatabase,
+} from '../../redux/product/productSlice';
 
 const { Meta } = Card;
 
@@ -27,11 +30,14 @@ const DeleteModal = ({
       await dispatch(deleteOneSubCategoryBySlug(item.slug, token));
     } else if (title === 'Product') {
       await dispatch(deleteProductById(item._id, token));
+    } else if (title === 'Image') {
+      console.log('About to remove image from cloudinary and database');
+      await dispatch(removeImageCloudAndDatabase(item, token));
     }
     setTimeout(() => onModalClose(), 40);
     updateItems(true);
   };
-
+  console.log('image ', item);
   return (
     <Modal
       open={onModalOpen}
@@ -41,7 +47,9 @@ const DeleteModal = ({
       <Card
         hoverable
         style={{ width: 240 }}
-        cover={<img alt='category visual' src={item.images[0].url} />}>
+        cover={
+          <img alt='category visual' src={item.url || item.images[0].url} />
+        }>
         <Meta title={item.title} description={`Remove The ${title}?`} />
         <Divider orientation='center' style={{ fontSize: 10 }}>
           Confirm or decline
