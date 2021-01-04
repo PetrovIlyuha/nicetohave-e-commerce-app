@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-const LoadingBeforeRedirect = ({ timeoutMs }) => {
-  const [counter, setCounter] = useState(timeoutMs);
+const LoadingBeforeRedirect = ({ timeout }) => {
+  const [counter, setCounter] = useState(timeout);
 
   const history = useHistory();
 
