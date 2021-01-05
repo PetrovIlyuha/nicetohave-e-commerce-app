@@ -68,6 +68,8 @@ export const createProduct = async (req, res) => {
   }
 };
 
+export const updateProduct = async (req, res) => {};
+
 export const getAllProducts = async (req, res) => {
   let products = await Product.find({})
     .populate('category subcategories')
@@ -85,7 +87,7 @@ export const getProductsByCategoryId = async (req, res) => {
 
 export const getProductBySlug = async (req, res) => {
   const slug = req.params.slug;
-  let product = await Product.find({ slug });
+  let product = await Product.find({ slug }).populate('category subcategories');
   res.json(product);
 };
 
