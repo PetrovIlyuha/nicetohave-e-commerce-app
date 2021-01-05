@@ -24,6 +24,14 @@ const StyledNav = styled.nav`
   color: 'white';
 `;
 
+const StyledDrawer = styled.nav`
+  height: 100%;
+  width: 100%;
+  background-color: ${props => (props.darkState ? '#0F2034' : '#714674')};
+  color: 'white';
+  box-shadow: 2px 4px 12px -2px rgba(0, 0, 0, 0.4);
+`;
+
 const AdminNavSidebar = ({ fullHeight, showSidebar, setShowSidebar }) => {
   const { darkMode: darkState } = useSelector(state => state.theme);
   const { categories } = useSelector(state => state.categories);
@@ -50,7 +58,7 @@ const AdminNavSidebar = ({ fullHeight, showSidebar, setShowSidebar }) => {
       onClose={handleClose}
       visible={showSidebar}
       key={'side menu'}>
-      <StyledNav darkState={darkState} fullHeight={fullHeight}>
+      <StyledDrawer darkState={darkState} fullHeight={fullHeight}>
         <ul className='nav flex-column justify-center'>
           <li className='nav-item'>
             <Link
@@ -112,7 +120,7 @@ const AdminNavSidebar = ({ fullHeight, showSidebar, setShowSidebar }) => {
             </Link>
           </li>
         </ul>
-      </StyledNav>
+      </StyledDrawer>
     </Drawer>
   ) : (
     <StyledNav darkState={darkState} fullHeight={fullHeight}>
