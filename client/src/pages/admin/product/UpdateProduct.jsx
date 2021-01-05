@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AdminNavSidebar from '../../../components/navigation/AdminNavSidebar';
-import { Image, Col, Row, Typography, Button } from 'antd';
+import { Image, Col, Row, Typography, Button, Divider } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getCategoryByIdThunk,
   getOneProductBySlug,
 } from '../../../redux/product/productSlice';
-import { fadeIn } from '../subcategories/animations';
+import { fadeIn, slideInLeft, slideInRight } from '../subcategories/animations';
 import { motion } from 'framer-motion';
 import './UpdateProduct.css';
 import { MenuOutlined } from '@ant-design/icons';
@@ -16,6 +16,8 @@ import DeleteModal from '../../../components/interaction/DeleteModal';
 import SubDropDown from '../subcategories/SubDropDown';
 import { getAllCategoriesThunk } from '../../../redux/categories/categoriesSlice';
 import { getAllSubCategoriesThunk } from '../../../redux/subcategories/subCategoriesSlice';
+import { Link } from 'react-router-dom';
+import MultiSelect from './MultiSelect';
 const { Title } = Typography;
 
 const UpdateProduct = ({ match }) => {
@@ -25,18 +27,22 @@ const UpdateProduct = ({ match }) => {
   const dispatch = useDispatch();
   const { categories } = useSelector(state => state.categories);
   const { subcategories } = useSelector(state => state.subcategories);
+  const { darkMode } = useSelector(state => state.theme);
   const [subCategoriesFromMain, setSubCategoriesFromMain] = useState([]);
   const [localData, setLocalData] = useState({});
   const [newCategory, defineNewCategory] = useState(null);
+  const [selectedSubCategories, setSelectedSubCategories] = useState([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
   const [updateDescription, setUpdateDescription] = useState(false);
+
   const [imageToDelete, setImageToDelete] = useState(null);
   const [revalidateProduct, setRevalidateProduct] = useState(false);
 
   const [showSidebar, setShowSidebar, showMenuIcon] = useShowSideMenu();
   const categoriesNames = categories?.map(cat => cat.name);
   const descriptionRef = useRef();
-
+  console.log(localData);
   useEffect(() => {
     dispatch(getAllCategoriesThunk());
     dispatch(getAllSubCategoriesThunk());
@@ -64,12 +70,13 @@ const UpdateProduct = ({ match }) => {
 
   useEffect(() => {
     if (newCategory) {
+      console.log(newCategory);
       const newParentCategory = categories.find(
         cat => cat.name === newCategory,
       );
       dispatch(getCategoryByIdThunk(newParentCategory._id));
     }
-  }, [dispatch, categories]);
+  }, [dispatch, categories, newCategory]);
 
   useEffect(() => {
     if (category) {
@@ -108,13 +115,94 @@ const UpdateProduct = ({ match }) => {
                 />
               )}
             </div>
-            <StyledMediumBox>
-              <SubDropDown
-                label='Need to Change Main Category?'
-                items={categoriesNames}
-                selectItem={defineNewCategory}
-              />
-            </StyledMediumBox>
+            <Row>
+              {category && (
+                <Row spacing={12}>
+                  <Col>
+                    <StyledMediumBox>
+                      This product will be moved to:{' '}
+                      <strong>
+                        {localData?.category?.name || category.name}
+                      </strong>
+                    </StyledMediumBox>
+                  </Col>
+                </Row>
+              )}
+              <Col>
+                <StyledMediumBox>
+                  <SubDropDown
+                    label='Need to Change Main Category?'
+                    items={categoriesNames}
+                    selectItem={defineNewCategory}
+                  />
+                </StyledMediumBox>
+              </Col>
+              <Col>
+                <StyledMediumBox>
+                  Need to create new category?
+                  <Link to='/admin/category'>
+                    <Button type='secondary'>Create +</Button>
+                  </Link>
+                </StyledMediumBox>
+              </Col>
+            </Row>
+            {category && subCategoriesFromMain.length > 0 ? (
+              <>
+                <Divider
+                  style={{
+                    backgroundColor: darkMode ? 'white' : '',
+                    height: '2px',
+                  }}
+                />
+                <motion.h2
+                  variants={slideInLeft}
+                  initial='hidden'
+                  animate='show'
+                  className={darkMode ? 'text-white' : ''}>
+                  Select Sub-categories
+                </motion.h2>
+                <motion.div className='my-3'>
+                  <MultiSelect
+                    items={subCategoriesFromMain}
+                    setSelected={setSelectedSubCategories}
+                    placeholder={'Select subcategory(ies)'}
+                    icon={'📦'}
+                  />
+                  {selectedSubCategories.length === 1 && (
+                    <motion.p
+                      variants={slideInRight}
+                      initial='hidden'
+                      animate='show'>
+                      You can select multiple sub-categories by focusing on the
+                      field
+                    </motion.p>
+                  )}
+                </motion.div>
+              </>
+            ) : (
+              <motion.div
+                variants={slideInRight}
+                initial='hidden'
+                animate='show'>
+                <Row>
+                  <Col>
+                    <Typography type='secondary'>
+                      You have not{' '}
+                      {!category
+                        ? 'selected category'
+                        : `created any Sub-Categories for ${category?.name}`}
+                    </Typography>
+                    {!category && (
+                      <Link to={`/admin/subcategory/${category?.name}`}>
+                        <Button type='primary' className='mt-3'>
+                          Create Now?
+                        </Button>
+                      </Link>
+                    )}
+                  </Col>
+                </Row>
+              </motion.div>
+            )}
             <Row className='image__gallery--update'>
               {images?.map(image => (
                 <Col
@@ -202,7 +290,9 @@ const ImageActionButtons = styled(Row)`
 `;
 
 const StyledMediumBox = styled.div`
-  padding: 2rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
 `;
 
 export default UpdateProduct;
