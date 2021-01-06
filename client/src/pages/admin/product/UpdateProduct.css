@@ -1,4 +1,5 @@
 .image__gallery--update {
+  margin: 2rem 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(1, 200px);

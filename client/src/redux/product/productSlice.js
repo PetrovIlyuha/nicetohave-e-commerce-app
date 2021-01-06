@@ -128,4 +128,12 @@ export const deleteProductById = (id, token) => async dispatch => {
   dispatch(setRemovedProduct(data));
 };
 
+export const removeImageCloudAndDatabase = (image, token) => async dispatch => {
+  await axios.delete(
+    `${process.env.REACT_APP_API}/remove-image`,
+    { public_id: image.public_id },
+    { headers: { token } },
+  );
+};
+
 export default subCategoriesSlice.reducer;
