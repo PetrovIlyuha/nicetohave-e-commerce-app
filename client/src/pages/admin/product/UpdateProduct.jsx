@@ -29,7 +29,16 @@ const UpdateProduct = ({ match }) => {
   const { subcategories } = useSelector(state => state.subcategories);
   const { darkMode } = useSelector(state => state.theme);
   const [subCategoriesFromMain, setSubCategoriesFromMain] = useState([]);
-  const [localData, setLocalData] = useState({});
+  const [localData, setLocalData] = useState({
+    description: '',
+    price: 0,
+    images: [],
+    brand: '',
+    quantity: 0,
+    sold: 0,
+    shipping: true,
+    title: '',
+  });
   const [newCategory, defineNewCategory] = useState(null);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -188,18 +197,22 @@ const UpdateProduct = ({ match }) => {
                 </motion.div>
               </>
             )}
-            <Row>
-              <Col span={12}>
-                <h6>
-                  Need to add New Subcategory?{' '}
-                  <Link to={`/admin/subcategory/${category.name}`}>
-                    <Button type='primary' size='small'>
-                      Create one.
-                    </Button>
-                  </Link>
-                </h6>
-              </Col>
-            </Row>
+            {category && subCategoriesFromMain.length > 0 && (
+              <Row>
+                <Col span={12}>
+                  <h6>
+                    Need to add New Subcategory?{' '}
+                    {category && (
+                      <Link to={`/admin/subcategory/${category.name}`}>
+                        <Button type='primary' size='small'>
+                          Create one.
+                        </Button>
+                      </Link>
+                    )}
+                  </h6>
+                </Col>
+              </Row>
+            )}
             <Row className='image__gallery--update'>
               {images?.map(image => (
                 <Col
