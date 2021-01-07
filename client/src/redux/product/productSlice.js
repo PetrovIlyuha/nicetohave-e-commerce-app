@@ -133,12 +133,14 @@ export const deleteProductById = (id, token) => async dispatch => {
 };
 
 export const removeImageCloudAndDatabase = (image, token) => async dispatch => {
-  const response = await axios.delete(
+  const { data } = await axios.delete(
     `${process.env.REACT_APP_API}/remove-image`,
-    { public_id: image.public_id },
-    { headers: { token } },
+    {
+      data: { public_id: image.public_id },
+      headers: { token },
+    },
   );
-  dispatch(imageRemoved(response));
+  dispatch(imageRemoved(data.message));
 };
 
 export default subCategoriesSlice.reducer;
