@@ -33,6 +33,6 @@ export const removeImage = (req, res) => {
         error: err,
       });
     }
-    res.send('OK');
+    res.json({ message: 'Image was removed from CDN' });
   });
 };
