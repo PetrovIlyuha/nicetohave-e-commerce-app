@@ -54,6 +54,9 @@ const subCategoriesSlice = createSlice({
     clearRemovedProduct: (state, { payload }) => {
       state.removedProduct = null;
     },
+    imageRemoved: (state, { payload }) => {
+      state.imageRemoved = payload;
+    },
   },
 });
 
@@ -68,6 +71,7 @@ export const {
   setOneProductBySlug,
   setRemovedProduct,
   clearRemovedProduct,
+  imageRemoved,
 } = subCategoriesSlice.actions;
 
 export const createProductThunk = (product, token) => async dispatch => {
@@ -129,11 +133,12 @@ export const deleteProductById = (id, token) => async dispatch => {
 };
 
 export const removeImageCloudAndDatabase = (image, token) => async dispatch => {
-  await axios.delete(
+  const response = await axios.delete(
     `${process.env.REACT_APP_API}/remove-image`,
     { public_id: image.public_id },
     { headers: { token } },
   );
+  dispatch(imageRemoved(response));
 };
 
 export default subCategoriesSlice.reducer;
