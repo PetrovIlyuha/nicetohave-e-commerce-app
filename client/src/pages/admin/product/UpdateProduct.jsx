@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AdminNavSidebar from '../../../components/navigation/AdminNavSidebar';
-import { Image, Col, Row, Typography, Button, Divider } from 'antd';
+import { Image, Col, Row, Typography, Button, Divider, Upload } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getCategoryByIdThunk,
@@ -9,7 +9,7 @@ import {
 import { fadeIn, slideInLeft, slideInRight } from '../subcategories/animations';
 import { motion } from 'framer-motion';
 import './UpdateProduct.css';
-import { MenuOutlined } from '@ant-design/icons';
+import { MenuOutlined, UploadOutlined } from '@ant-design/icons';
 import useShowSideMenu from '../../../hooks/useShowSideMenu';
 import styled from 'styled-components';
 import DeleteModal from '../../../components/interaction/DeleteModal';
@@ -21,10 +21,10 @@ import MultiSelect from './MultiSelect';
 const { Title } = Typography;
 
 const UpdateProduct = ({ match }) => {
+  const dispatch = useDispatch();
   const { slug } = match.params;
   const { productBySlug, category } = useSelector(state => state.products);
 
-  const dispatch = useDispatch();
   const { categories } = useSelector(state => state.categories);
   const { subcategories } = useSelector(state => state.subcategories);
   const { darkMode } = useSelector(state => state.theme);
@@ -42,7 +42,7 @@ const UpdateProduct = ({ match }) => {
   const [showSidebar, setShowSidebar, showMenuIcon] = useShowSideMenu();
   const categoriesNames = categories?.map(cat => cat.name);
   const descriptionRef = useRef();
-  console.log(localData);
+
   useEffect(() => {
     dispatch(getAllCategoriesThunk());
     dispatch(getAllSubCategoriesThunk());
@@ -70,7 +70,6 @@ const UpdateProduct = ({ match }) => {
 
   useEffect(() => {
     if (newCategory) {
-      console.log(newCategory);
       const newParentCategory = categories.find(
         cat => cat.name === newCategory,
       );
@@ -84,19 +83,30 @@ const UpdateProduct = ({ match }) => {
         cat => cat.parent === category?._id,
       );
       setSubCategoriesFromMain(subsPartition);
+      setLocalData({ ...localData, category: category });
     }
   }, [category, subcategories]);
 
-  const { description, price, images } = localData;
+  useEffect(() => {
+    setLocalData({ ...localData, subcategories: selectedSubCategories });
+  }, [selectedSubCategories]);
 
-  console.log(category);
-  console.log('Subcategories from new parent', subCategoriesFromMain);
+  const {
+    description,
+    price,
+    images,
+    brand,
+    quantity,
+    sold,
+    shipping,
+    title,
+  } = localData;
 
+  console.log('local state', localData);
   return (
     <Row>
       <div className='col-md-3 mr-2'>
         <AdminNavSidebar
-          fullHeight
           showSidebar={showSidebar}
           setShowSidebar={setShowSidebar}
         />
@@ -121,14 +131,12 @@ const UpdateProduct = ({ match }) => {
                   <Col>
                     <StyledMediumBox>
                       This product will be moved to:{' '}
-                      <strong>
-                        {localData?.category?.name || category.name}
-                      </strong>
+                      <strong>{category.name}</strong>
                     </StyledMediumBox>
                   </Col>
                 </Row>
               )}
-              <Col>
+              <Col span={12}>
                 <StyledMediumBox>
                   <SubDropDown
                     label='Need to Change Main Category?'
@@ -137,7 +145,7 @@ const UpdateProduct = ({ match }) => {
                   />
                 </StyledMediumBox>
               </Col>
-              <Col>
+              <Col span={12}>
                 <StyledMediumBox>
                   Need to create new category?
                   <Link to='/admin/category'>
@@ -146,7 +154,7 @@ const UpdateProduct = ({ match }) => {
                 </StyledMediumBox>
               </Col>
             </Row>
-            {category && subCategoriesFromMain.length > 0 ? (
+            {category && subCategoriesFromMain.length > 0 && (
               <>
                 <Divider
                   style={{
@@ -179,30 +187,19 @@ const UpdateProduct = ({ match }) => {
                   )}
                 </motion.div>
               </>
-            ) : (
-              <motion.div
-                variants={slideInRight}
-                initial='hidden'
-                animate='show'>
-                <Row>
-                  <Col>
-                    <Typography type='secondary'>
-                      You have not{' '}
-                      {!category
-                        ? 'selected category'
-                        : `created any Sub-Categories for ${category?.name}`}
-                    </Typography>
-                    {!category && (
-                      <Link to={`/admin/subcategory/${category?.name}`}>
-                        <Button type='primary' className='mt-3'>
-                          Create Now?
-                        </Button>
-                      </Link>
-                    )}
-                  </Col>
-                </Row>
-              </motion.div>
             )}
+            <Row>
+              <Col span={12}>
+                <h6>
+                  Need to add New Subcategory?{' '}
+                  <Link to='/admin/subcategory/:categoryName'>
+                    <Button type='primary' size='small'>
+                      Create one.
+                    </Button>
+                  </Link>
+                </h6>
+              </Col>
+            </Row>
             <Row className='image__gallery--update'>
               {images?.map(image => (
                 <Col
@@ -222,9 +219,14 @@ const UpdateProduct = ({ match }) => {
                       }}>
                       Delete
                     </Button>
-                    <Button type='primary' size='small'>
-                      Upload & Replace
-                    </Button>
+                    <Upload>
+                      <Button
+                        type='primary'
+                        size='small'
+                        icon={<UploadOutlined />}>
+                        Replace with new Photo
+                      </Button>
+                    </Upload>
                   </ImageActionButtons>
                 </Col>
               ))}
