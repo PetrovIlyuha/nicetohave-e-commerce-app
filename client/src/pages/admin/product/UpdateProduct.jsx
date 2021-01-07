@@ -192,7 +192,7 @@ const UpdateProduct = ({ match }) => {
               <Col span={12}>
                 <h6>
                   Need to add New Subcategory?{' '}
-                  <Link to='/admin/subcategory/:categoryName'>
+                  <Link to={`/admin/subcategory/${category.name}`}>
                     <Button type='primary' size='small'>
                       Create one.
                     </Button>
